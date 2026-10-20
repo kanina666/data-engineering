@@ -1,0 +1,9 @@
+--- list_objects_v2(Bucket='hh-lake') ---
+dataset/it_vacancies_2024.csv                    847619384  2026-10-20 09:56:18
+results/duckdb/skills_k1.csv                         35368  2026-10-20 10:28:16
+results/duckdb/skills_k2.csv                        696232  2026-10-20 10:28:17
+results/duckdb/skills_k3.csv                       5781511  2026-10-20 10:28:18
+results/mapreduce/skills_k1.csv                      36739  2026-10-20 10:27:45
+results/mapreduce/skills_k2.csv                     716801  2026-10-20 10:27:46
+results/mapreduce/skills_k3.csv                    5917225  2026-10-20 10:27:47
+results/mapreduce/stats.json                           127  2026-10-20 10:27:48

@@ -1,0 +1,5 @@
+chunk 7: FAILED (injected mapper failure on chunk 7); retry 1
+chunk 7: ok (attempt 1)
+MODE=opt chunk=8MB workers=4 io_threads=8 chunks=102 retries=1 time=11.48s
+stats: {'rows': 229388, 'java': 7206, 'java_with_skills': 4870, 'java_with_salary': 1386, 'java_skills_and_salary': 1074}
+distinct: {'k1': 1376, 'k2': 20802, 'k3': 137413} total: {'k1': 32642, 'k2': 129227, 'k3': 411399}

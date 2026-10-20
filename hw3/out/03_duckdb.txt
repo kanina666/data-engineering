@@ -1,0 +1,6 @@
+source: s3://hh-lake/dataset/it_vacancies_2024.csv
+stats: [(7206, 4870, 1386)]
+k=1: distinct=1376 total=32642
+k=2: distinct=20802 total=129227
+k=3: distinct=137413 total=411399
+time=16.24s

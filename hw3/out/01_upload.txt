@@ -1,0 +1,5 @@
+bucket created: hh-lake
+uploaded in 13.9s
+--- list_objects_v2 ---
+dataset/it_vacancies_2024.csv 847619384 2026-10-20 09:56:18.597000+00:00
+local md5: 45041a115287e29b41fc8f82818ec5a6

@@ -1,0 +1,54 @@
+[clean] медиана сегмента Java (навыки и зарплата): 200000 руб., n=927
+[clean] пар с n>=15: 303; троек с n>=10: 1018
+
+=== [clean] pairs: топ-10 ПОВЫШАЮТ ===
+            base         added  n  employers  median_base  median_with    delta
+Spring Framework        Spring 15          8     215000.0     348000.0 133000.0
+      PostgreSQL Microservices 18         10     200000.0     317500.0 117500.0
+      Kubernetes        Spring 16          8     265500.0     375000.0 109500.0
+            Java Microservices 30         17     206875.0     300000.0  93125.0
+Spring Framework Microservices 19         10     215000.0     300000.0  85000.0
+            REST        Spring 20         13     217500.0     300000.0  82500.0
+       Hibernate Microservices 15          8     217500.0     300000.0  82500.0
+      PostgreSQL      RabbitMQ 50         22     200000.0     282462.0  82462.0
+    Apache Maven      RabbitMQ 17          7     218750.0     300000.0  81250.0
+    Apache Maven       Java SE 15          8     218750.0     300000.0  81250.0
+
+=== [clean] pairs: топ-10 ПОНИЖАЮТ ===
+       base      added  n  employers  median_base  median_with     delta
+     Kotlin     Gradle 17          9     250000.0     150000.0 -100000.0
+ PostgreSQL    Java SE 17         12     200000.0     105000.0  -95000.0
+Spring Boot   REST API 15         10     230000.0     150000.0  -80000.0
+Spring Boot      JUnit 23         10     230000.0     150000.0  -80000.0
+       Java        ООП 64         40     206875.0     130250.0  -76625.0
+     Docker      Linux 28         17     225000.0     152250.0  -72750.0
+       Java       HTTP 17         10     206875.0     150000.0  -56875.0
+       Java     Python 23         17     206875.0     150000.0  -56875.0
+       Java       HTML 30         19     206875.0     150000.0  -56875.0
+       Java JavaScript 37         24     206875.0     150000.0  -56875.0
+
+=== [clean] triples: топ-10 ПОВЫШАЮТ ===
+                        base         added  n  employers  median_base  median_with    delta
+          Hibernate + Spring          REST 11          6     210000.0     400000.0 190000.0
+   Docker + Spring Framework        Spring 12          5     225000.0     400000.0 175000.0
+                Kafka + REST        Spring 13          7     240000.0     400000.0 160000.0
+                Kafka + REST     Hibernate 12          7     240000.0     400000.0 160000.0
+Hibernate + Spring Framework        Spring 11          6     240000.0     400000.0 160000.0
+    Kafka + Spring Framework        Spring 11          5     240000.0     400000.0 160000.0
+     REST + Spring Framework        Spring 11          5     240000.0     400000.0 160000.0
+                Java + Maven Microservices 10          5     220000.0     374100.0 154100.0
+         Maven + Spring Boot Microservices 10          5     220000.0     374100.0 154100.0
+               Docker + REST        Spring 15          8     245000.0     391500.0 146500.0
+
+=== [clean] triples: топ-10 ПОНИЖАЮТ ===
+                    base           added  n  employers  median_base  median_with     delta
+              Git + Java          Python 10          6     200000.0      74000.0 -126000.0
+              Java + SQL     Базы данных 12          8     200000.0      80040.0 -119960.0
+     Docker + Kubernetes           Linux 11          8     261000.0     150000.0 -111000.0
+              Java + SQL             CSS 11          6     200000.0      90000.0 -110000.0
+    Spring + Spring Boot           JUnit 10          3     250000.0     145000.0 -105000.0
+           Java + Kotlin         Android 10          9     250000.0     150000.0 -100000.0
+           Java + Kotlin          Gradle 16          8     250000.0     150000.0 -100000.0
+PostgreSQL + Spring Boot           JUnit 17          8     250000.0     150000.0 -100000.0
+           Java + Kotlin Английский язык 12          6     250000.0     151125.0  -98875.0
+     Docker + PostgreSQL           Linux 19         11     250000.0     152250.0  -97750.0

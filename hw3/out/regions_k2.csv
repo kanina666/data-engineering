@@ -1,0 +1,16 @@
+region,combo,vacancies,n_sal,median_salary
+Москва,Java + Spring Framework,957,190,250000.0
+Москва,Java + PostgreSQL,811,167,250000.0
+Москва,Java + SQL,625,131,247950.0
+Москва,Java + Kafka,510,85,250000.0
+Москва,Java + Spring Boot,503,109,247950.0
+Санкт-Петербург,Java + Spring Framework,277,74,185000.0
+Санкт-Петербург,Java + PostgreSQL,233,68,171173.0
+Санкт-Петербург,Git + Java,153,57,180000.0
+Санкт-Петербург,Java + SQL,150,46,250000.0
+Санкт-Петербург,PostgreSQL + Spring Framework,149,46,138950.0
+Новосибирск,Java + Spring Framework,95,28,150000.0
+Новосибирск,Java + PostgreSQL,78,31,180000.0
+Новосибирск,Git + Java,60,24,177500.0
+Новосибирск,Java + SQL,60,21,180000.0
+Новосибирск,PostgreSQL + Spring Framework,51,24,150000.0

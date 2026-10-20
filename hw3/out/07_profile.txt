@@ -1,0 +1,19 @@
+MapReduce до (naive: 1 процесс, чанк 64 МБ, без combiner) | run 1: 25.8 s, peak 570 MB, rc=0
+MapReduce до (naive: 1 процесс, чанк 64 МБ, без combiner) | run 2: 25.5 s, peak 571 MB, rc=0
+MapReduce до (naive: 1 процесс, чанк 64 МБ, без combiner) | run 3: 30.4 s, peak 571 MB, rc=0
+MapReduce после (opt: 8 mapper-процессов, 8 потоков read-ahead, чанк 16 МБ, combiner) | run 1: 13.1 s, peak 1127 MB, rc=0
+MapReduce после (opt: 8 mapper-процессов, 8 потоков read-ahead, чанк 16 МБ, combiner) | run 2: 12.5 s, peak 1170 MB, rc=0
+MapReduce после (opt: 8 mapper-процессов, 8 потоков read-ahead, чанк 16 МБ, combiner) | run 3: 13.9 s, peak 1084 MB, rc=0
+MapReduce после-2 (tuned: 4 mapper-процесса, 8 потоков read-ahead, чанк 8 МБ, combiner) | run 1: 13.7 s, peak 463 MB, rc=0
+MapReduce после-2 (tuned: 4 mapper-процесса, 8 потоков read-ahead, чанк 8 МБ, combiner) | run 2: 14.5 s, peak 471 MB, rc=0
+MapReduce после-2 (tuned: 4 mapper-процесса, 8 потоков read-ahead, чанк 8 МБ, combiner) | run 3: 14.1 s, peak 471 MB, rc=0
+DuckDB (SQL к S3) | run 1: 15.9 s, peak 1631 MB, rc=0
+DuckDB (SQL к S3) | run 2: 15.0 s, peak 1674 MB, rc=0
+DuckDB (SQL к S3) | run 3: 14.2 s, peak 1582 MB, rc=0
+[sweep] opt workers=8 io_threads=1 chunk=16MB: 30.7 s, peak 540 MB, rc=0
+[sweep] opt workers=1 io_threads=8 chunk=16MB: 16.7 s, peak 510 MB, rc=0
+[sweep] opt workers=4 io_threads=8 chunk=16MB: 13.2 s, peak 696 MB, rc=0
+[sweep] opt workers=8 io_threads=4 chunk=16MB: 14.2 s, peak 772 MB, rc=0
+[sweep] opt workers=8 io_threads=8 chunk=8MB: 14.4 s, peak 730 MB, rc=0
+[sweep] opt workers=8 io_threads=8 chunk=32MB: 13.1 s, peak 1789 MB, rc=0
+[sweep] opt workers=12 io_threads=8 chunk=16MB: 13.0 s, peak 1200 MB, rc=0

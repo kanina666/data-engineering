@@ -1,0 +1,119 @@
+=== Таблица 1. Рынок и зарплаты (руб./мес. на руки, только RUR) ===
+         region  vacancies  with_skills  pct_skills  with_salary      p25   median      p75     mean  pct_remote  pct_active
+         Москва       3642         2297        63.1          624 190000.0 240000.0 300000.0 244777.0        36.8         6.9
+Санкт-Петербург        949          621        65.4          203 130000.0 208800.0 270000.0 210741.0        35.0         9.3
+    Новосибирск        305          209        68.5           72 135000.0 182500.0 248463.0 184979.0        31.8        11.5
+
+=== Медиана зарплаты по опыту ===
+                        n                                median                            
+region             Москва Новосибирск Санкт-Петербург    Москва Новосибирск Санкт-Петербург
+experience                                                                                 
+Более 6 лет          58.0         3.0            23.0  350000.0    315000.0        304500.0
+Нет опыта            35.0        10.0            17.0   75000.0     65250.0         65250.0
+От 1 года до 3 лет  158.0        15.0            62.0  182438.0    145000.0        127500.0
+От 3 до 6 лет       373.0        44.0           101.0  250000.0    207500.0        250000.0
+
+=== Таблица 2. Топ-10 навыков по регионам (% от вакансий региона с навыками; lift к сегменту) ===
+region            Москва       Новосибирск   Санкт-Петербург
+rank                                                        
+1                   Java              Java              Java
+2       Spring Framework  Spring Framework  Spring Framework
+3             PostgreSQL        PostgreSQL        PostgreSQL
+4                    SQL               Git               Git
+5                  Kafka               SQL               SQL
+6            Spring Boot     Hibernate ORM       Spring Boot
+7                    Git            Docker             Kafka
+8                 Docker       Spring Boot            Docker
+9                   REST               ООП            Kotlin
+10                Kotlin             Kafka     Hibernate ORM
+         region  rank            skill  vacancies  pct  lift  median_salary  n_sal
+         Москва     1             Java       2085 90.8  0.99       250000.0    420
+         Москва     2 Spring Framework       1026 44.7  0.98       250000.0    200
+         Москва     3       PostgreSQL        890 38.7  0.99       250000.0    178
+         Москва     4              SQL        678 29.5  0.99       241250.0    150
+         Москва     5            Kafka        557 24.2  1.19       250000.0     95
+         Москва     6      Spring Boot        533 23.2  1.10       240000.0    113
+         Москва     7              Git        477 20.8  0.86       250000.0    120
+         Москва     8           Docker        373 16.2  1.02       250000.0    105
+         Москва     9             REST        304 13.2  1.15       250000.0     75
+         Москва    10           Kotlin        293 12.8  0.98       255000.0     68
+Санкт-Петербург     1             Java        578 93.1  1.01       200000.0    141
+Санкт-Петербург     2 Spring Framework        296 47.7  1.05       185000.0     83
+Санкт-Петербург     3       PostgreSQL        246 39.6  1.01       168345.0     69
+Санкт-Петербург     4              Git        164 26.4  1.09       174000.0     59
+Санкт-Петербург     5              SQL        161 25.9  0.87       250000.0     48
+Санкт-Петербург     6      Spring Boot        134 21.6  1.02       250000.0     40
+Санкт-Петербург     7            Kafka        109 17.6  0.86       250000.0     25
+Санкт-Петербург     8           Docker        103 16.6  1.04       250000.0     24
+Санкт-Петербург     9           Kotlin        101 16.3  1.25       300000.0     25
+Санкт-Петербург    10    Hibernate ORM         78 12.6  0.89       150000.0     33
+    Новосибирск     1             Java        199 95.2  1.03       150000.0     59
+    Новосибирск     2 Spring Framework         97 46.4  1.02       150000.0     28
+    Новосибирск     3       PostgreSQL         81 38.8  0.99       167500.0     32
+    Новосибирск     4              Git         64 30.6  1.26       177500.0     26
+    Новосибирск     5              SQL         64 30.6  1.03       190000.0     22
+    Новосибирск     6    Hibernate ORM         47 22.5  1.58       167500.0     22
+    Новосибирск     7           Docker         37 17.7  1.12       150000.0      7
+    Новосибирск     8      Spring Boot         31 14.8  0.70       210000.0     11
+    Новосибирск     9              ООП         27 12.9  1.07        65250.0     13
+    Новосибирск    10            Kafka         25 12.0  0.59       177500.0      6
+
+=== Специфичные навыки региона (lift, не менее 15 вакансий) ===
+         region                       skill  vacancies  pct  lift
+         Москва Интеграционное тестирование         18  0.8  1.91
+         Москва                     Camunda         49  2.1  1.79
+         Москва                      Allure         20  0.9  1.77
+         Москва               Apache Tomcat         42  1.8  1.62
+         Москва                      Appium         16  0.7  1.62
+         Москва        Atlassian Confluence         36  1.6  1.62
+         Москва                      Hadoop         19  0.8  1.61
+Санкт-Петербург                     Mockito         19  3.1  2.98
+Санкт-Петербург                        JDBC         18  2.9  2.02
+Санкт-Петербург         Управление командой         19  3.1  1.91
+Санкт-Петербург                Unit Testing         22  3.5  1.50
+Санкт-Петербург                       Linux         66 10.6  1.49
+Санкт-Петербург                  JavaScript         37  6.0  1.45
+Санкт-Петербург              Atlassian Jira         23  3.7  1.37
+    Новосибирск                          QA         15  7.2  1.63
+    Новосибирск               Hibernate ORM         47 22.5  1.58
+    Новосибирск                       Linux         23 11.0  1.54
+    Новосибирск                       MySQL         17  8.1  1.51
+    Новосибирск                      ORACLE         24 11.5  1.44
+    Новосибирск                Apache Maven         19  9.1  1.39
+    Новосибирск                         Git         64 30.6  1.26
+
+=== Топ-5 пар и троек навыков по регионам ===
+-- k=2
+         region                         combo  vacancies  n_sal  median_salary
+         Москва       Java + Spring Framework        957    190       250000.0
+         Москва             Java + PostgreSQL        811    167       250000.0
+         Москва                    Java + SQL        625    131       247950.0
+         Москва                  Java + Kafka        510     85       250000.0
+         Москва            Java + Spring Boot        503    109       247950.0
+Санкт-Петербург       Java + Spring Framework        277     74       185000.0
+Санкт-Петербург             Java + PostgreSQL        233     68       171173.0
+Санкт-Петербург                    Git + Java        153     57       180000.0
+Санкт-Петербург                    Java + SQL        150     46       250000.0
+Санкт-Петербург PostgreSQL + Spring Framework        149     46       138950.0
+    Новосибирск       Java + Spring Framework         95     28       150000.0
+    Новосибирск             Java + PostgreSQL         78     31       180000.0
+    Новосибирск                    Git + Java         60     24       177500.0
+    Новосибирск                    Java + SQL         60     21       180000.0
+    Новосибирск PostgreSQL + Spring Framework         51     24       150000.0
+-- k=3
+         region                                   combo  vacancies  n_sal  median_salary
+         Москва    Java + PostgreSQL + Spring Framework        464     97       250000.0
+         Москва           Java + SQL + Spring Framework        295     71       250000.0
+         Москва         Java + Kafka + Spring Framework        292     42       250000.0
+         Москва               Java + Kafka + PostgreSQL        267     50       250000.0
+         Москва         Java + PostgreSQL + Spring Boot        256     55       250000.0
+Санкт-Петербург    Java + PostgreSQL + Spring Framework        143     45       130000.0
+Санкт-Петербург           Git + Java + Spring Framework         90     40       185000.0
+Санкт-Петербург         Java + PostgreSQL + Spring Boot         71     19       250000.0
+Санкт-Петербург                 Git + Java + PostgreSQL         65     31       130000.0
+Санкт-Петербург           Java + SQL + Spring Framework         64     22       250000.0
+    Новосибирск    Java + PostgreSQL + Spring Framework         50     24       150000.0
+    Новосибирск           Git + Java + Spring Framework         41     19       150000.0
+    Новосибирск Hibernate ORM + Java + Spring Framework         41     18       120000.0
+    Новосибирск                 Git + Java + PostgreSQL         37     21       155000.0
+    Новосибирск                        Git + Java + SQL         31     13       210000.0

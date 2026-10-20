@@ -1,0 +1,14 @@
+__pycache__/
+out/mr*/
+out/duck/
+out/prof_*/
+out/fig/
+*.pyc
+.venv/
+.idea/
+08_report.py
+it_vacancies_2024.csv
+hh.zip
+*.pptx
+work/
+shots/

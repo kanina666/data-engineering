@@ -1,0 +1,54 @@
+[all] медиана сегмента Java (навыки и зарплата): 193200 руб., n=1074
+[all] пар с n>=15: 361; троек с n>=10: 1340
+
+=== [all] pairs: топ-10 ПОВЫШАЮТ ===
+            base       added  n  employers  median_base  median_with    delta
+           MySQL      Kotlin 17          1      65250.0     300000.0 234750.0
+   Hibernate ORM       Redis 15          7      65250.0     280000.0 214750.0
+   Hibernate ORM       Kafka 28         17      65250.0     250000.0 184750.0
+           MySQL    RabbitMQ 25          4      65250.0     250000.0 184750.0
+   Hibernate ORM Spring Boot 45         20      65250.0     240000.0 174750.0
+   Hibernate ORM      Docker 35         16      65250.0     240000.0 174750.0
+Spring Framework      Spring 15          8     179175.0     348000.0 168825.0
+          ORACLE      Kotlin 19          7      65250.0     230000.0 164750.0
+   Hibernate ORM        REST 44         20      65250.0     225600.0 160350.0
+   Hibernate ORM       Linux 15          5      65250.0     225000.0 159750.0
+
+=== [all] pairs: топ-10 ПОНИЖАЮТ ===
+base         added   n  employers  median_base  median_with     delta
+Java           JSP  46          1     190000.0      65250.0 -124750.0
+Java Java Servlets  49          4     190000.0      65250.0 -124750.0
+Java           SVN  55          3     190000.0      65250.0 -124750.0
+Java  Unit Testing  72         15     190000.0      65250.0 -124750.0
+Java       Java EE 162         16     190000.0      65250.0 -124750.0
+Java     Java Core 182         23     190000.0      65250.0 -124750.0
+Java        ORACLE 190         28     190000.0      65250.0 -124750.0
+Java         MySQL 191         22     190000.0      65250.0 -124750.0
+Java           ООП 209         41     190000.0      65250.0 -124750.0
+Java Hibernate ORM 276         64     190000.0      65250.0 -124750.0
+
+=== [all] triples: топ-10 ПОВЫШАЮТ ===
+                base       added  n  employers  median_base  median_with    delta
+Hibernate ORM + Java     Jenkins 10          5      65250.0     304500.0 239250.0
+  MySQL + PostgreSQL    RabbitMQ 23          3      65250.0     300000.0 234750.0
+  MySQL + PostgreSQL Spring Boot 23          4      65250.0     300000.0 234750.0
+         Git + MySQL    RabbitMQ 23          3      65250.0     300000.0 234750.0
+  MySQL + PostgreSQL      Docker 22          4      65250.0     300000.0 234750.0
+        Java + MySQL      Kotlin 17          1      65250.0     300000.0 234750.0
+  MySQL + PostgreSQL      Kotlin 17          1      65250.0     300000.0 234750.0
+         Git + MySQL      Kotlin 17          1      65250.0     300000.0 234750.0
+        Java + MySQL      Spring 11          3      65250.0     300000.0 234750.0
+         Git + MySQL      Spring 11          3      65250.0     300000.0 234750.0
+
+=== [all] triples: топ-10 ПОНИЖАЮТ ===
+      base         added  n  employers  median_base  median_with     delta
+Java + SQL   Базы данных 12          8     200000.0      80040.0 -119960.0
+Git + Java           JSP 46          1     177500.0      65250.0 -112250.0
+Git + Java Java Servlets 47          2     177500.0      65250.0 -112250.0
+Git + Java           SVN 53          2     177500.0      65250.0 -112250.0
+Git + Java       Java EE 57          8     177500.0      65250.0 -112250.0
+Git + Java        ORACLE 59          8     177500.0      65250.0 -112250.0
+Git + Java  Unit Testing 61          9     177500.0      65250.0 -112250.0
+Git + Java     Java Core 66          9     177500.0      65250.0 -112250.0
+Git + Java           ООП 90         26     177500.0      65250.0 -112250.0
+Git + Java         MySQL 91         16     177500.0      65250.0 -112250.0

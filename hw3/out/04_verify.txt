@@ -1,0 +1,25 @@
+k=1: MR keys=1376 DuckDB keys=1376 sum MR=32642 sum DuckDB=32642
+   only in MR=0 only in DuckDB=0 count mismatches=0 median mismatches=0
+   md5 MR=5028d283831e80f676c178cfc3602f61 md5 DuckDB=5028d283831e80f676c178cfc3602f61 -> MATCH
+   top: Java: MR=4484 DuckDB=4484
+   top: Spring Framework: MR=2210 DuckDB=2210
+   top: PostgreSQL: MR=1903 DuckDB=1903
+   top: SQL: MR=1449 DuckDB=1449
+   top: Git: MR=1179 DuckDB=1179
+k=2: MR keys=20802 DuckDB keys=20802 sum MR=129227 sum DuckDB=129227
+   only in MR=0 only in DuckDB=0 count mismatches=0 median mismatches=0
+   md5 MR=7417abbb8009efa4dc7120d34cd1455c md5 DuckDB=7417abbb8009efa4dc7120d34cd1455c -> MATCH
+   top: Java + Spring Framework: MR=2081 DuckDB=2081
+   top: Java + PostgreSQL: MR=1773 DuckDB=1773
+   top: Java + SQL: MR=1348 DuckDB=1348
+   top: PostgreSQL + Spring Framework: MR=1159 DuckDB=1159
+   top: Git + Java: MR=1091 DuckDB=1091
+k=3: MR keys=137413 DuckDB keys=137413 sum MR=411399 sum DuckDB=411399
+   only in MR=0 only in DuckDB=0 count mismatches=0 median mismatches=0
+   md5 MR=fff609abd28886d217c7bd3e9936812a md5 DuckDB=fff609abd28886d217c7bd3e9936812a -> MATCH
+   top: Java + PostgreSQL + Spring Framework: MR=1098 DuckDB=1098
+   top: Git + Java + Spring Framework: MR=628 DuckDB=628
+   top: Java + SQL + Spring Framework: MR=565 DuckDB=565
+   top: Git + Java + PostgreSQL: MR=552 DuckDB=552
+   top: Hibernate ORM + Java + Spring Framework: MR=546 DuckDB=546
+RESULT: ALL MATCH

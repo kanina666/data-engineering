@@ -1,0 +1,2 @@
+CONTAINER ID   IMAGE                  STATUS             PORTS                                                             NAMES
+993d957f2d5a   rustfs/rustfs:latest   Up About an hour   0.0.0.0:9000-9001->9000-9001/tcp, [::]:9000-9001->9000-9001/tcp   rustfs
