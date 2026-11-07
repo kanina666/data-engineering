@@ -27,9 +27,9 @@ def _fetch(client, a, b):
     return client.get_object(Bucket=BUCKET, Key=KEY, Range=f"bytes={a}-{b}")["Body"].read()
 
 
-def iter_raw(client, chunk_bytes, io_threads):
+def iter_raw(client, chunk_bytes, io_threads, start=0):
     size = client.head_object(Bucket=BUCKET, Key=KEY)["ContentLength"]
-    ranges = [(p, min(p + chunk_bytes, size) - 1) for p in range(0, size, chunk_bytes)]
+    ranges = [(p, min(p + chunk_bytes, size) - 1) for p in range(start, size, chunk_bytes)]
     if io_threads <= 1:
         for a, b in ranges:
             yield _fetch(client, a, b)
@@ -49,9 +49,9 @@ def iter_raw(client, chunk_bytes, io_threads):
             yield data
 
 
-def iter_blocks(client, chunk_bytes, io_threads=1):
+def iter_blocks(client, chunk_bytes, io_threads=1, start=0):
     carry = b""
-    for body in iter_raw(client, chunk_bytes, io_threads):
+    for body in iter_raw(client, chunk_bytes, io_threads, start):
         data = carry + body
         cut = split_records(data)
         if cut < 0:

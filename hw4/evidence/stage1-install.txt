@@ -1,0 +1,100 @@
+# Этап 1. Установка ZooKeeper 3.9.6 (вариант Docker)
+# начато: 2026-11-07 14:36:11.220 UTC
+# Выбран вариант с Docker: хост — Windows 11, kill -STOP из Git Bash не действует на нативные процессы
+# Windows, поэтому приостановка лидера делается через docker pause (cgroup freezer, аналог SIGSTOP).
+
+[2026-11-07 14:36:11.376 UTC] $ docker version --format 'client={{.Client.Version}} server={{.Server.Version}}'
+client=29.2.1 server=29.2.1
+
+[2026-11-07 14:36:11.709 UTC] $ docker compose version
+Docker Compose version v5.0.2
+
+[2026-11-07 14:36:12.067 UTC] $ docker pull zookeeper:3.9.6
+3.9.6: Pulling from library/zookeeper
+Digest: sha256:bbf678337a9242fcb6e49e51193855078ec515251cf11fe0bcfabae6a10e040a
+Status: Image is up to date for zookeeper:3.9.6
+docker.io/library/zookeeper:3.9.6
+
+[2026-11-07 14:36:44.850 UTC] $ docker image inspect zookeeper:3.9.6 --format '{{.Id}} {{index .RepoDigests 0}}'
+sha256:bbf678337a9242fcb6e49e51193855078ec515251cf11fe0bcfabae6a10e040a zookeeper@sha256:bbf678337a9242fcb6e49e51193855078ec515251cf11fe0bcfabae6a10e040a
+
+[2026-11-07 14:36:45.290 UTC] $ docker run --rm zookeeper:3.9.6 java -version
+openjdk version "17.0.21" 2026-10-20
+OpenJDK Runtime Environment Temurin-17.0.21+9 (build 17.0.21+9)
+OpenJDK 64-Bit Server VM Temurin-17.0.21+9 (build 17.0.21+9, mixed mode, sharing)
+
+[2026-11-07 14:36:47.800 UTC] $ docker run --rm zookeeper:3.9.6 bash -c 'echo JAVA_HOME=$JAVA_HOME; ls -d /apache-zookeeper-*'
+JAVA_HOME=/opt/java/openjdk
+/apache-zookeeper-3.9.6-bin
+
+[2026-11-07 14:36:50.505 UTC] $ docker run --rm zookeeper:3.9.6 zkServer.sh version
+ZooKeeper JMX enabled by default
+Using config: /conf/zoo.cfg
+Apache ZooKeeper, version 3.9.6 2026-09-03 19:29 UTC
+
+[2026-11-07 14:36:52.245 UTC] $ docker image inspect rustfs/rustfs:latest --format '{{index .RepoDigests 0}}'
+rustfs/rustfs@sha256:1803faef57627e2d9c2e7d89d655d712ddded5389040054987163043fecb6a3c
+
+[2026-11-07 14:36:52.715 UTC] $ docker compose build
+ Image hw4-coordinator Building 
+ Image hw4-coordinator Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.06kB 0.1s done
+#1 DONE 0.1s
+
+#2 [coord-b internal] load build definition from Dockerfile
+#2 transferring dockerfile: 305B done
+#2 DONE 0.0s
+
+#3 [coord-a internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 11.0s
+
+#4 [coord-b internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [coord-a 1/4] FROM docker.io/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54
+#5 resolve docker.io/library/python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54 0.0s done
+#5 DONE 0.1s
+
+#6 [coord-a internal] load build context
+#6 transferring context: 37B done
+#6 DONE 0.0s
+
+#7 [coord-a 2/4] COPY requirements.txt /tmp/requirements.txt
+#7 CACHED
+
+#8 [coord-a 3/4] RUN pip install --no-cache-dir -r /tmp/requirements.txt
+#8 CACHED
+
+#9 [coord-a 4/4] WORKDIR /app
+#9 CACHED
+
+#10 [coord-b] exporting to image
+#10 exporting layers done
+#10 exporting manifest sha256:6d10eb4130eb72f3075e9faa978488caf8e79af44f757034e9b180dc62b8d363 done
+#10 exporting config sha256:cb95f7ec01949e6ed4da3883ae4e5bb0de55b3e02e624cb88c9c01f056cac1aa 0.0s done
+#10 exporting attestation manifest sha256:8d0b840c8e5b25caaad3ac403c970b5964607a2d9653a926f708c0cc5a901a0a
+#10 exporting attestation manifest sha256:8d0b840c8e5b25caaad3ac403c970b5964607a2d9653a926f708c0cc5a901a0a 0.1s done
+#10 exporting manifest list sha256:187d1622ecc4f0f5e05d9a0ac500fe1e29d5303e434aed4b5b9de9c32f695114 0.0s done
+#10 naming to docker.io/library/hw4-coordinator:latest 0.0s done
+#10 unpacking to docker.io/library/hw4-coordinator:latest 0.0s done
+#10 DONE 0.2s
+
+#11 [coord-a] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:e8415385c0fa482888ecbba63926fbf108ab972523d9c4a1a030c9a370f2897c 0.0s done
+#11 exporting config sha256:e8d6dfe20897adbc36ca2bd40ac188ec043cd53291058477836f2a0ae5b2066b 0.0s done
+#11 exporting attestation manifest sha256:ff791be9b81e24aad6131892b5b502425c38f067ae0a468db8e8be3e5349df6d 0.1s done
+#11 exporting manifest list sha256:717f5a604767ef185a9034525551a2ff08d89346c4c739f69642a319fcfd48c2 0.0s done
+#11 naming to docker.io/library/hw4-coordinator:latest done
+#11 unpacking to docker.io/library/hw4-coordinator:latest 0.0s done
+#11 DONE 0.4s
+
+#12 [coord-b] resolving provenance for metadata file
+#12 DONE 0.0s
+
+#13 [coord-a] resolving provenance for metadata file
+#13 DONE 0.0s
+ Image hw4-coordinator Built 
+ Image hw4-coordinator Built 

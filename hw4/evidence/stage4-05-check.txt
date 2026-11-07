@@ -1,0 +1,41 @@
+# Проверка запуска run-fence: записи результата, версия /result, BadVersionError, контрольные числа ДЗ № 3, время смены лидера
+# начато: 2026-11-07 14:52:36.242 UTC
+
+[2026-11-07 14:52:36.481 UTC] $ docker compose run --rm --no-deps coord-a python src/check_run.py logs/run-fence evidence/stage4-events.txt --fencing 1
+ Container hw4-coord-a-run-5937ec5c1964 Creating 
+ Container hw4-coord-a-run-5937ec5c1964 Created 
+Запуск logs/run-fence, FENCING=1, приостановлен coord-a в 2026-11-07 14:51:26.777 UTC
+  coord-a-20261107-145027-pid1.log: последний запрос лидера к ZooKeeper перед паузой: 2026-11-07 14:51:24.386 чекпоинт: блоков=36, смещение=603978745, zk-hw/checkpoints/e… (2.391 с до паузы)
+  сервер ZooKeeper истёк сессию лидера в 2026-11-07 14:51:35.650: 8.873 с после паузы
+  coord-a-20261107-145027-pid1.log: контрольные числа СОВПАЛИ с ДЗ № 3
+    stats    ДЗ3={"rows": 229388, "java": 7206, "java_with_skills": 4870, "java_with_salary": 1386, "java_skills_and_salary": 1074}
+             тут={"rows": 229388, "java": 7206, "java_with_skills": 4870, "java_with_salary": 1386, "java_skills_and_salary": 1074}
+    distinct ДЗ3={"k1": 1376, "k2": 20802, "k3": 137413}
+             тут={"k1": 1376, "k2": 20802, "k3": 137413}
+    total    ДЗ3={"k1": 32642, "k2": 129227, "k3": 411399}
+             тут={"k1": 32642, "k2": 129227, "k3": 411399}
+    md5      ДЗ3={"k1": "5028d283831e80f676c178cfc3602f61", "k2": "7417abbb8009efa4dc7120d34cd1455c", "k3": "fff609abd28886d217c7bd3e9936812a"}
+             тут={"k1": "5028d283831e80f676c178cfc3602f61", "k2": "7417abbb8009efa4dc7120d34cd1455c", "k3": "fff609abd28886d217c7bd3e9936812a"}
+  coord-b-20261107-145031-pid1.log: стал лидером в 2026-11-07 14:51:35.667 -> смена лидера 8.890 с после приостановки
+    2026-11-07 14:51:36.211 продолжил с чекпоинта: блоков=36, смещение=603978745, чекпоинт эпохи 1 от coord-a (zk-hw/checkpoints/epoch1-chunk0036.json.gz)
+  coord-b-20261107-145031-pid1.log: контрольные числа СОВПАЛИ с ДЗ № 3
+    stats    ДЗ3={"rows": 229388, "java": 7206, "java_with_skills": 4870, "java_with_salary": 1386, "java_skills_and_salary": 1074}
+             тут={"rows": 229388, "java": 7206, "java_with_skills": 4870, "java_with_salary": 1386, "java_skills_and_salary": 1074}
+    distinct ДЗ3={"k1": 1376, "k2": 20802, "k3": 137413}
+             тут={"k1": 1376, "k2": 20802, "k3": 137413}
+    total    ДЗ3={"k1": 32642, "k2": 129227, "k3": 411399}
+             тут={"k1": 32642, "k2": 129227, "k3": 411399}
+    md5      ДЗ3={"k1": "5028d283831e80f676c178cfc3602f61", "k2": "7417abbb8009efa4dc7120d34cd1455c", "k3": "fff609abd28886d217c7bd3e9936812a"}
+             тут={"k1": "5028d283831e80f676c178cfc3602f61", "k2": "7417abbb8009efa4dc7120d34cd1455c", "k3": "fff609abd28886d217c7bd3e9936812a"}
+  строк «записал результат»: 1
+    coord-b-20261107-145031-pid1.log: 2026-11-07 14:51:58.724 записал результат: /result version=1, эпоха=2, zk-hw/results/epoch2
+  строк с BadVersionError: 1
+    coord-a-20261107-145027-pid1.log: 2026-11-07 14:52:25.789 BadVersionError: запись отклонена — моя эпоха 1 устарела, текущая эпоха 2; результат не записан, завершаюсь
+  /result: version=1, записал coord-b, эпоха 2; /epoch=2; контрольные числа в /result совпали с ДЗ № 3: True
+СВОДКА: fencing=1 writes=1 result_version=1 bad_version=да control_match=True failover_s=8.890
+  [x] строк «записал результат»
+  [x] версия /result
+  [x] BadVersionError
+  [x] контрольные числа
+  [x] смена лидера измерена
+  [x] /result от запасного

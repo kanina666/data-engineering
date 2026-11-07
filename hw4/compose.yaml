@@ -1,0 +1,81 @@
+name: hw4
+
+x-zk: &zk
+  image: zookeeper:3.9.6
+  restart: "no"
+
+x-coord: &coord
+  build: ./src
+  image: hw4-coordinator
+  restart: "no"
+  depends_on: [zk1, zk2, zk3, rustfs]
+  working_dir: /app
+  environment: &coord-env
+    PYTHONPATH: /app/hw3
+    PYTHONUNBUFFERED: "1"
+    ZK_HOSTS: zk1:2181,zk2:2182,zk3:2183
+    SESSION_TIMEOUT: "10"
+    S3_ENDPOINT: http://rustfs:9000
+    FENCING: ${FENCING:-0}
+    STEP_DELAY: ${STEP_DELAY:-0}
+    CHUNK_MB: ${CHUNK_MB:-16}
+    CKPT_EVERY: ${CKPT_EVERY:-10}
+    LOG_DIR: /app/logs/${RUN:-current}
+  volumes:
+    - ../hw3:/app/hw3:ro
+    - ./src:/app/src:ro
+    - ./logs:/app/logs
+    - ./evidence:/app/evidence
+  command: ["python", "src/coordinator.py"]
+
+services:
+  zk1:
+    <<: *zk
+    hostname: zk1
+    container_name: zk1
+    volumes:
+      - ./zk/zk1/conf/zoo.cfg:/conf/zoo.cfg
+      - ./zk/zk1/data:/data
+
+  zk2:
+    <<: *zk
+    hostname: zk2
+    container_name: zk2
+    volumes:
+      - ./zk/zk2/conf/zoo.cfg:/conf/zoo.cfg
+      - ./zk/zk2/data:/data
+
+  zk3:
+    <<: *zk
+    hostname: zk3
+    container_name: zk3
+    volumes:
+      - ./zk/zk3/conf/zoo.cfg:/conf/zoo.cfg
+      - ./zk/zk3/data:/data
+
+  rustfs:
+    image: rustfs/rustfs@sha256:1803faef57627e2d9c2e7d89d655d712ddded5389040054987163043fecb6a3c
+    container_name: hw4-rustfs
+    environment:
+      RUSTFS_ACCESS_KEY: rustfsadmin
+      RUSTFS_SECRET_KEY: rustfsadmin
+      RUSTFS_VOLUMES: /data
+    volumes:
+      - rustfs-data:/data
+
+  coord-a:
+    <<: *coord
+    container_name: coord-a
+    environment:
+      <<: *coord-env
+      NAME: coord-a
+
+  coord-b:
+    <<: *coord
+    container_name: coord-b
+    environment:
+      <<: *coord-env
+      NAME: coord-b
+
+volumes:
+  rustfs-data:

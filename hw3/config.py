@@ -1,7 +1,9 @@
+import os
+
 import boto3
 from botocore.config import Config
 
-ENDPOINT = "http://localhost:9000"
+ENDPOINT = os.environ.get("S3_ENDPOINT", "http://localhost:9000")
 ACCESS, SECRET = "rustfsadmin", "rustfsadmin"
 BUCKET = "hh-lake"
 KEY = "dataset/it_vacancies_2024.csv"

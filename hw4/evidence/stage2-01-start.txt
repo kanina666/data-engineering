@@ -1,0 +1,117 @@
+# Этап 2.1. Запуск трёх серверов и роли leader/follower
+# начато: 2026-11-07 14:39:05.112 UTC
+
+[2026-11-07 14:39:05.242 UTC] $ docker compose rm -sf zk1 zk2 zk3
+ Container zk1 Stopping 
+ Container zk3 Stopping 
+ Container zk2 Stopping 
+ Container zk3 Stopped 
+ Container zk1 Stopped 
+ Container zk2 Stopped 
+Going to remove zk1, zk2, zk3
+ Container zk3 Removing 
+ Container zk1 Removing 
+ Container zk2 Removing 
+ Container zk1 Removed 
+ Container zk3 Removed 
+ Container zk2 Removed 
+
+[2026-11-07 14:39:07.209 UTC] $ rm -rf zk/zk*/data/version-2 zk/zk*/data/zookeeper_server.pid
+
+[2026-11-07 14:39:07.410 UTC] $ head zk/zk*/data/myid
+==> zk/zk1/data/myid <==
+1
+
+==> zk/zk2/data/myid <==
+2
+
+==> zk/zk3/data/myid <==
+3
+
+[2026-11-07 14:39:07.590 UTC] $ cat zk/zk1/conf/zoo.cfg
+# ZooKeeper 3.9.6, сервер 1 ансамбля из трёх (контейнер zk1 в compose.yaml)
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=/data
+clientPort=2181
+# разные порты кворума и выборов у каждого сервера; строки server.N одинаковы во всех конфигах
+server.1=zk1:2888:3888
+server.2=zk2:2889:3889
+server.3=zk3:2890:3890
+quorumListenOnAllIPs=true
+# AdminServer на 8080 не нужен, и три копии конфликтовали бы за порт
+admin.enableServer=false
+4lw.commands.whitelist=srvr,stat,ruok,mntr
+# таймаут сессии координатора 10 с укладывается в [2*tickTime, 20*tickTime] = [4 с, 40 с]
+
+[2026-11-07 14:39:07.759 UTC] $ diff <(grep ^server zk/zk1/conf/zoo.cfg) <(grep ^server zk/zk2/conf/zoo.cfg) && diff <(grep ^server zk/zk1/conf/zoo.cfg) <(grep ^server zk/zk3/conf/zoo.cfg) && echo 'строки server.N одинаковые во всех трёх конфигах'
+строки server.N одинаковые во всех трёх конфигах
+
+[2026-11-07 14:39:08.115 UTC] $ docker compose up -d zk1 zk2 zk3
+ Container zk3 Creating 
+ Container zk1 Creating 
+ Container zk2 Creating 
+ Container zk1 Created 
+ Container zk3 Created 
+ Container zk2 Created 
+ Container zk3 Starting 
+ Container zk1 Starting 
+ Container zk2 Starting 
+ Container zk1 Started 
+ Container zk2 Started 
+ Container zk3 Started 
+
+[2026-11-07 14:39:12.464 UTC] $ docker exec zk1 zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /conf/zoo.cfg
+Client port found: 2181. Client address: localhost. Client SSL: false.
+Mode: follower
+
+[2026-11-07 14:39:13.527 UTC] $ docker exec zk1 bash -c 'echo srvr | nc localhost 2181'
+Zookeeper version: 3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+Latency min/avg/max: 0/0.0/0
+Received: 3
+Sent: 2
+Connections: 1
+Outstanding: 0
+Zxid: 0x0
+Mode: follower
+Node count: 5
+
+[2026-11-07 14:39:13.915 UTC] $ docker exec zk2 zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /conf/zoo.cfg
+Client port found: 2182. Client address: localhost. Client SSL: false.
+Mode: follower
+
+[2026-11-07 14:39:14.707 UTC] $ docker exec zk2 bash -c 'echo srvr | nc localhost 2182'
+Zookeeper version: 3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+Latency min/avg/max: 0/0.0/0
+Received: 3
+Sent: 2
+Connections: 1
+Outstanding: 0
+Zxid: 0x0
+Mode: follower
+Node count: 5
+
+[2026-11-07 14:39:15.099 UTC] $ docker exec zk3 zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /conf/zoo.cfg
+Client port found: 2183. Client address: localhost. Client SSL: false.
+Mode: leader
+
+[2026-11-07 14:39:15.810 UTC] $ docker exec zk3 bash -c 'echo srvr | nc localhost 2183'
+Zookeeper version: 3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+Latency min/avg/max: 0/0.0/0
+Received: 3
+Sent: 2
+Connections: 1
+Outstanding: 0
+Zxid: 0x100000000
+Mode: leader
+Node count: 5
+Proposal sizes last/min/max: -1/-1/-1
+
+ИТОГ: лидер — zk3

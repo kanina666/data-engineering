@@ -1,0 +1,7 @@
+leader_container=coord-a
+leader_pid_in_container=1
+leader_pid_on_docker_host=32836
+paused_container=coord-a
+pause_utc=2026-11-07 14:48:54.649
+resume_utc=2026-11-07 14:49:34.140
+session_expired_utc=2026-11-07 14:49:03.659

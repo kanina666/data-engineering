@@ -1,0 +1,234 @@
+# Этап 2.3. Остановка второго сервера (zk2): у zk1 нет кворума, ансамбль не отвечает
+# начато: 2026-11-07 14:39:32.580 UTC
+
+[2026-11-07 14:39:32.866 UTC] $ docker compose stop zk2
+ Container zk2 Stopping 
+ Container zk2 Stopped 
+
+[2026-11-07 14:39:35.271 UTC] $ sleep 5
+
+[2026-11-07 14:39:40.452 UTC] $ docker exec zk3 zkServer.sh status
+Error response from daemon: container c1fb518acd6433fa32d2e57a6486ea069de61e33abd1e1ec86844cb806bcfebd is not running
+
+[2026-11-07 14:39:40.816 UTC] $ docker exec zk3 bash -c 'echo srvr | nc localhost 2183'
+Error response from daemon: container c1fb518acd6433fa32d2e57a6486ea069de61e33abd1e1ec86844cb806bcfebd is not running
+
+[2026-11-07 14:39:41.170 UTC] $ docker exec zk2 zkServer.sh status
+Error response from daemon: container 109c08d3e78664c27a619827612c77929233a9d97c09b99d31a7cf34e0480021 is not running
+
+[2026-11-07 14:39:41.510 UTC] $ docker exec zk2 bash -c 'echo srvr | nc localhost 2182'
+Error response from daemon: container 109c08d3e78664c27a619827612c77929233a9d97c09b99d31a7cf34e0480021 is not running
+
+[2026-11-07 14:39:41.852 UTC] $ docker exec zk1 zkServer.sh status
+ZooKeeper JMX enabled by default
+Using config: /conf/zoo.cfg
+Client port found: 2181. Client address: localhost. Client SSL: false.
+Error contacting service. It is probably not running.
+
+[2026-11-07 14:39:42.629 UTC] $ docker exec zk1 bash -c 'echo srvr | nc localhost 2181'
+This ZooKeeper instance is not currently serving requests
+
+[2026-11-07 14:39:42.998 UTC] $ docker exec zk1 bash -c 'echo ruok | nc localhost 2181; echo; echo stat | nc localhost 2181'
+imok
+This ZooKeeper instance is not currently serving requests
+
+# zkCli не может выполнить команды: соединение есть, но сервер без кворума не обслуживает запросы (timeout 30 с)
+
+[2026-11-07 14:39:43.426 UTC] $ docker exec zk1 timeout 30 zkCli.sh -waitforconnection -timeout 10000 -server zk1:2181,zk2:2182,zk3:2183 ls /
+Connecting to zk1:2181,zk2:2182,zk3:2183
+2026-11-07 14:39:44,128 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:zookeeper.version=3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+2026-11-07 14:39:44,131 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:host.name=zk1
+2026-11-07 14:39:44,131 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.version=17.0.21
+2026-11-07 14:39:44,131 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.vendor=Eclipse Adoptium
+2026-11-07 14:39:44,132 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.home=/opt/java/openjdk
+2026-11-07 14:39:44,133 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.class.path=/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/classes:/apache-zookeeper-3.9.6-bin/bin/../build/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../build/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-prometheus-metrics-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-jute-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/snappy-java-1.1.10.5.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/slf4j-api-2.0.13.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_servlet-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_hotspot-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_common-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-unix-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-epoll-4.1.137.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-classes-epoll-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-classes-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-windows-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-resolver-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-handler-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-codec-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-buffer-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/metrics-core-4.1.12.1.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-core-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-classic-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jline-3.30.14-jdk8.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-ajax-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-servlet-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-server-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-security-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-io-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-http-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/javax.servlet-api-3.1.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-databind-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-core-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-annotations-2.22.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-io-2.17.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-cli-1.5.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/audience-annotations-0.12.0.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/src/main/resources/lib/*.jar:/conf:
+2026-11-07 14:39:44,134 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+2026-11-07 14:39:44,135 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.io.tmpdir=/tmp
+2026-11-07 14:39:44,135 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.compiler=<NA>
+2026-11-07 14:39:44,136 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.name=Linux
+2026-11-07 14:39:44,137 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.arch=amd64
+2026-11-07 14:39:44,137 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.version=6.6.87.2-microsoft-standard-WSL2
+2026-11-07 14:39:44,137 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.name=root
+2026-11-07 14:39:44,137 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.home=/root
+2026-11-07 14:39:44,138 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.dir=/apache-zookeeper-3.9.6-bin
+2026-11-07 14:39:44,138 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.free=234MB
+2026-11-07 14:39:44,138 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.max=256MB
+2026-11-07 14:39:44,138 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.total=248MB
+2026-11-07 14:39:44,141 [myid:] - INFO  [main:o.a.z.ZooKeeper@635] - Initiating client connection, connectString=zk1:2181,zk2:2182,zk3:2183 sessionTimeout=10000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@20d3d15a
+2026-11-07 14:39:44,149 [myid:] - INFO  [main:o.a.z.c.X509Util@84] - Setting -D jdk.tls.rejectClientInitiatedRenegotiation=true to disable client-initiated TLS renegotiation
+2026-11-07 14:39:44,157 [myid:] - INFO  [main:o.a.z.ClientCnxnSocket@235] - jute.maxbuffer value is 1048575 Bytes
+2026-11-07 14:39:44,166 [myid:] - INFO  [main:o.a.z.ClientCnxn@1734] - zookeeper.request.timeout value is 0. feature enabled=false
+2026-11-07 14:39:48,170 [myid:] - ERROR [main-SendThread():o.a.z.c.StaticHostProvider@148] - Unable to resolve address: zk3/<unresolved>:2183
+java.net.UnknownHostException: zk3: No address associated with hostname
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(Unknown Source)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(Unknown Source)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.zookeeper.client.StaticHostProvider$1.getAllByName(StaticHostProvider.java:88)
+	at org.apache.zookeeper.client.StaticHostProvider.resolve(StaticHostProvider.java:141)
+	at org.apache.zookeeper.client.StaticHostProvider.next(StaticHostProvider.java:368)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1197)
+2026-11-07 14:39:48,173 [myid:zk3:2183] - WARN  [main-SendThread(zk3:2183):o.a.z.ClientCnxn$SendThread@1301] - Session 0x0 for server zk3/<unresolved>:2183, Closing socket connection. Attempting reconnect except it is a SessionExpiredException or SessionTimeoutException.
+java.lang.IllegalArgumentException: Unable to canonicalize address zk3/<unresolved>:2183 because it's not resolvable
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:78)
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:41)
+	at org.apache.zookeeper.ClientCnxn$SendThread.startConnect(ClientCnxn.java:1150)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1200)
+2026-11-07 14:39:52,277 [myid:zk3:2183] - ERROR [main-SendThread(zk3:2183):o.a.z.c.StaticHostProvider@148] - Unable to resolve address: zk2/<unresolved>:2182
+java.net.UnknownHostException: zk2: No address associated with hostname
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(Unknown Source)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(Unknown Source)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.zookeeper.client.StaticHostProvider$1.getAllByName(StaticHostProvider.java:88)
+	at org.apache.zookeeper.client.StaticHostProvider.resolve(StaticHostProvider.java:141)
+	at org.apache.zookeeper.client.StaticHostProvider.next(StaticHostProvider.java:368)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1197)
+2026-11-07 14:39:52,278 [myid:zk2:2182] - WARN  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1301] - Session 0x0 for server zk2/<unresolved>:2182, Closing socket connection. Attempting reconnect except it is a SessionExpiredException or SessionTimeoutException.
+java.lang.IllegalArgumentException: Unable to canonicalize address zk2/<unresolved>:2182 because it's not resolvable
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:78)
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:41)
+	at org.apache.zookeeper.ClientCnxn$SendThread.startConnect(ClientCnxn.java:1150)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1200)
+2026-11-07 14:39:52,381 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1170] - Opening socket connection to server zk1/172.26.0.3:2181.
+2026-11-07 14:39:52,381 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1172] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+2026-11-07 14:39:52,388 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1006] - Socket connection established, initiating session, client: /172.26.0.3:60098, server: zk1/172.26.0.3:2181
+2026-11-07 14:39:52,393 [myid:zk1:2181] - WARN  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1301] - Session 0x0 for server zk1/172.26.0.3:2181, Closing socket connection. Attempting reconnect except it is a SessionExpiredException or SessionTimeoutException.
+org.apache.zookeeper.ClientCnxn$EndOfStreamException: Unable to read additional data from server sessionid 0x0, likely server has closed socket
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doIO(ClientCnxnSocketNIO.java:77)
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doTransport(ClientCnxnSocketNIO.java:356)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1290)
+2026-11-07 14:39:53,495 [myid:zk1:2181] - ERROR [main-SendThread(zk1:2181):o.a.z.c.StaticHostProvider@148] - Unable to resolve address: zk3/<unresolved>:2183
+java.net.UnknownHostException: zk3
+	at java.base/java.net.InetAddress$CachedAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.zookeeper.client.StaticHostProvider$1.getAllByName(StaticHostProvider.java:88)
+	at org.apache.zookeeper.client.StaticHostProvider.resolve(StaticHostProvider.java:141)
+	at org.apache.zookeeper.client.StaticHostProvider.next(StaticHostProvider.java:368)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1197)
+2026-11-07 14:39:53,970 [myid:zk3:2183] - WARN  [main-SendThread(zk3:2183):o.a.z.ClientCnxn$SendThread@1301] - Session 0x0 for server zk3/<unresolved>:2183, Closing socket connection. Attempting reconnect except it is a SessionExpiredException or SessionTimeoutException.
+java.lang.IllegalArgumentException: Unable to canonicalize address zk3/<unresolved>:2183 because it's not resolvable
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:78)
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:41)
+	at org.apache.zookeeper.ClientCnxn$SendThread.startConnect(ClientCnxn.java:1150)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1200)
+2026-11-07 14:39:54,070 [myid:zk3:2183] - ERROR [main-SendThread(zk3:2183):o.a.z.c.StaticHostProvider@148] - Unable to resolve address: zk2/<unresolved>:2182
+java.net.UnknownHostException: zk2
+	at java.base/java.net.InetAddress$CachedAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.zookeeper.client.StaticHostProvider$1.getAllByName(StaticHostProvider.java:88)
+	at org.apache.zookeeper.client.StaticHostProvider.resolve(StaticHostProvider.java:141)
+	at org.apache.zookeeper.client.StaticHostProvider.next(StaticHostProvider.java:368)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1197)
+
+WATCHER::
+
+WatchedEvent state:Closed type:None path:null zxid: -1
+2026-11-07 14:39:55,036 [myid:] - INFO  [main-EventThread:o.a.z.ClientCnxn$EventThread@556] - EventThread shut down for session: 0x0
+2026-11-07 14:39:55,036 [myid:] - INFO  [main:o.a.z.ZooKeeper@1230] - Session: 0x0 closed
+Exception in thread "main" java.io.IOException: org.apache.zookeeper.KeeperException$ConnectionLossException: KeeperErrorCode = ConnectionLoss
+	at org.apache.zookeeper.ZooKeeperMain.connectToZK(ZooKeeperMain.java:286)
+	at org.apache.zookeeper.ZooKeeperMain.<init>(ZooKeeperMain.java:300)
+	at org.apache.zookeeper.ZooKeeperMain.main(ZooKeeperMain.java:293)
+Caused by: org.apache.zookeeper.KeeperException$ConnectionLossException: KeeperErrorCode = ConnectionLoss
+	at org.apache.zookeeper.KeeperException.create(KeeperException.java:101)
+	... 3 more
+# код возврата: 1
+
+[2026-11-07 14:39:55.163 UTC] $ docker exec zk1 timeout 30 zkCli.sh -waitforconnection -timeout 10000 -server zk1:2181,zk2:2182,zk3:2183 create /stage2-no-quorum x
+Connecting to zk1:2181,zk2:2182,zk3:2183
+2026-11-07 14:39:55,742 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:zookeeper.version=3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+2026-11-07 14:39:55,744 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:host.name=zk1
+2026-11-07 14:39:55,744 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.version=17.0.21
+2026-11-07 14:39:55,744 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.vendor=Eclipse Adoptium
+2026-11-07 14:39:55,744 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.home=/opt/java/openjdk
+2026-11-07 14:39:55,744 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.class.path=/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/classes:/apache-zookeeper-3.9.6-bin/bin/../build/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../build/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-prometheus-metrics-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-jute-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/snappy-java-1.1.10.5.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/slf4j-api-2.0.13.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_servlet-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_hotspot-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_common-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-unix-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-epoll-4.1.137.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-classes-epoll-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-classes-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-windows-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-resolver-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-handler-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-codec-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-buffer-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/metrics-core-4.1.12.1.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-core-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-classic-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jline-3.30.14-jdk8.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-ajax-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-servlet-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-server-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-security-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-io-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-http-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/javax.servlet-api-3.1.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-databind-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-core-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-annotations-2.22.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-io-2.17.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-cli-1.5.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/audience-annotations-0.12.0.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/src/main/resources/lib/*.jar:/conf:
+2026-11-07 14:39:55,745 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+2026-11-07 14:39:55,745 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.io.tmpdir=/tmp
+2026-11-07 14:39:55,745 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.compiler=<NA>
+2026-11-07 14:39:55,745 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.name=Linux
+2026-11-07 14:39:55,745 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.arch=amd64
+2026-11-07 14:39:55,745 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.version=6.6.87.2-microsoft-standard-WSL2
+2026-11-07 14:39:55,745 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.name=root
+2026-11-07 14:39:55,746 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.home=/root
+2026-11-07 14:39:55,746 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.dir=/apache-zookeeper-3.9.6-bin
+2026-11-07 14:39:55,746 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.free=234MB
+2026-11-07 14:39:55,746 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.max=256MB
+2026-11-07 14:39:55,746 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.total=248MB
+2026-11-07 14:39:55,747 [myid:] - INFO  [main:o.a.z.ZooKeeper@635] - Initiating client connection, connectString=zk1:2181,zk2:2182,zk3:2183 sessionTimeout=10000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@20d3d15a
+2026-11-07 14:39:55,752 [myid:] - INFO  [main:o.a.z.c.X509Util@84] - Setting -D jdk.tls.rejectClientInitiatedRenegotiation=true to disable client-initiated TLS renegotiation
+2026-11-07 14:39:55,757 [myid:] - INFO  [main:o.a.z.ClientCnxnSocket@235] - jute.maxbuffer value is 1048575 Bytes
+2026-11-07 14:39:55,762 [myid:] - INFO  [main:o.a.z.ClientCnxn@1734] - zookeeper.request.timeout value is 0. feature enabled=false
+2026-11-07 14:39:55,768 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1170] - Opening socket connection to server zk1/172.26.0.3:2181.
+2026-11-07 14:39:55,768 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1172] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+2026-11-07 14:39:55,773 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1006] - Socket connection established, initiating session, client: /172.26.0.3:60110, server: zk1/172.26.0.3:2181
+2026-11-07 14:39:55,776 [myid:zk1:2181] - WARN  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1301] - Session 0x0 for server zk1/172.26.0.3:2181, Closing socket connection. Attempting reconnect except it is a SessionExpiredException or SessionTimeoutException.
+org.apache.zookeeper.ClientCnxn$EndOfStreamException: Unable to read additional data from server sessionid 0x0, likely server has closed socket
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doIO(ClientCnxnSocketNIO.java:77)
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doTransport(ClientCnxnSocketNIO.java:356)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1290)
+2026-11-07 14:39:59,882 [myid:zk1:2181] - ERROR [main-SendThread(zk1:2181):o.a.z.c.StaticHostProvider@148] - Unable to resolve address: zk2/<unresolved>:2182
+java.net.UnknownHostException: zk2: No address associated with hostname
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(Unknown Source)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(Unknown Source)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.zookeeper.client.StaticHostProvider$1.getAllByName(StaticHostProvider.java:88)
+	at org.apache.zookeeper.client.StaticHostProvider.resolve(StaticHostProvider.java:141)
+	at org.apache.zookeeper.client.StaticHostProvider.next(StaticHostProvider.java:368)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1197)
+2026-11-07 14:40:00,359 [myid:zk2:2182] - WARN  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1301] - Session 0x0 for server zk2/<unresolved>:2182, Closing socket connection. Attempting reconnect except it is a SessionExpiredException or SessionTimeoutException.
+java.lang.IllegalArgumentException: Unable to canonicalize address zk2/<unresolved>:2182 because it's not resolvable
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:78)
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:41)
+	at org.apache.zookeeper.ClientCnxn$SendThread.startConnect(ClientCnxn.java:1150)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1200)
+2026-11-07 14:40:04,462 [myid:zk2:2182] - ERROR [main-SendThread(zk2:2182):o.a.z.c.StaticHostProvider@148] - Unable to resolve address: zk3/<unresolved>:2183
+java.net.UnknownHostException: zk3: No address associated with hostname
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.InetAddress$PlatformNameService.lookupAllHostAddr(Unknown Source)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(Unknown Source)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName0(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at java.base/java.net.InetAddress.getAllByName(Unknown Source)
+	at org.apache.zookeeper.client.StaticHostProvider$1.getAllByName(StaticHostProvider.java:88)
+	at org.apache.zookeeper.client.StaticHostProvider.resolve(StaticHostProvider.java:141)
+	at org.apache.zookeeper.client.StaticHostProvider.next(StaticHostProvider.java:368)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1197)
+2026-11-07 14:40:04,815 [myid:zk3:2183] - WARN  [main-SendThread(zk3:2183):o.a.z.ClientCnxn$SendThread@1301] - Session 0x0 for server zk3/<unresolved>:2183, Closing socket connection. Attempting reconnect except it is a SessionExpiredException or SessionTimeoutException.
+java.lang.IllegalArgumentException: Unable to canonicalize address zk3/<unresolved>:2183 because it's not resolvable
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:78)
+	at org.apache.zookeeper.SaslServerPrincipal.getServerPrincipal(SaslServerPrincipal.java:41)
+	at org.apache.zookeeper.ClientCnxn$SendThread.startConnect(ClientCnxn.java:1150)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1200)
+2026-11-07 14:40:06,227 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1170] - Opening socket connection to server zk1/172.26.0.3:2181.
+2026-11-07 14:40:06,228 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1172] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+2026-11-07 14:40:06,228 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1006] - Socket connection established, initiating session, client: /172.26.0.3:42840, server: zk1/172.26.0.3:2181
+
+WATCHER::
+
+WatchedEvent state:Closed type:None path:null zxid: -1
+2026-11-07 14:40:06,334 [myid:] - INFO  [main:o.a.z.ZooKeeper@1230] - Session: 0x0 closed
+2026-11-07 14:40:06,334 [myid:] - INFO  [main-EventThread:o.a.z.ClientCnxn$EventThread@556] - EventThread shut down for session: 0x0
+Exception in thread "main" java.io.IOException: org.apache.zookeeper.KeeperException$ConnectionLossException: KeeperErrorCode = ConnectionLoss
+	at org.apache.zookeeper.ZooKeeperMain.connectToZK(ZooKeeperMain.java:286)
+	at org.apache.zookeeper.ZooKeeperMain.<init>(ZooKeeperMain.java:300)
+	at org.apache.zookeeper.ZooKeeperMain.main(ZooKeeperMain.java:293)
+Caused by: org.apache.zookeeper.KeeperException$ConnectionLossException: KeeperErrorCode = ConnectionLoss
+	at org.apache.zookeeper.KeeperException.create(KeeperException.java:101)
+	... 3 more
+# код возврата: 1

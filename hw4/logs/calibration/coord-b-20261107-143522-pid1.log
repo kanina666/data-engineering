@@ -1,0 +1,10 @@
+2026-11-07 14:35:22.681 UTC [coord-b pid=1] INFO старт координатора coord-b: Settings(name='coord-b', hosts='zk1:2181,zk2:2182,zk3:2183', session_timeout=10.0, fencing=False, chunk_mb=16, io_threads=4, step_delay=0.0, ckpt_every=10, log_dir='/app/logs/calibration')
+2026-11-07 14:35:22.868 UTC [coord-b pid=1] WARNING состояние сессии ZooKeeper: CONNECTED
+2026-11-07 14:35:22.869 UTC [coord-b pid=1] INFO подключился к ZooKeeper zk1:2181,zk2:2182,zk3:2183, сессия 0x1000af006350000, таймаут сессии 10 с
+2026-11-07 14:35:22.905 UTC [coord-b pid=1] INFO встал в очередь выборов: /election/n_0000000002
+2026-11-07 14:35:22.927 UTC [coord-b pid=1] INFO стал лидером, эпоха=2, FENCING=0
+2026-11-07 14:35:23.708 UTC [coord-b pid=1] INFO продолжил с чекпоинта: блоков=50, смещение=838859906, чекпоинт эпохи 1 от coord-a (zk-hw/checkpoints/epoch1-chunk0050.json.gz)
+2026-11-07 14:35:23.906 UTC [coord-b pid=1] INFO блок 51 обработан, смещение=847619384, java=7206
+2026-11-07 14:35:24.453 UTC [coord-b pid=1] INFO расчёт завершён, блоков=51; контрольные числа: {"stats": {"rows": 229388, "java": 7206, "java_with_skills": 4870, "java_with_salary": 1386, "java_skills_and_salary": 1074}, "distinct": {"k1": 1376, "k2": 20802, "k3": 137413}, "total": {"k1": 32642, "k2": 129227, "k3": 411399}, "md5": {"k1": "5028d283831e80f676c178cfc3602f61", "k2": "7417abbb8009efa4dc7120d34cd1455c", "k3": "fff609abd28886d217c7bd3e9936812a"}}
+2026-11-07 14:35:25.275 UTC [coord-b pid=1] INFO записал результат: /result version=2, эпоха=2, zk-hw/results/epoch2
+2026-11-07 14:35:25.314 UTC [coord-b pid=1] WARNING состояние сессии ZooKeeper: LOST

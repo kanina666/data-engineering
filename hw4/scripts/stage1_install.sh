@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+source "$(dirname "$0")/lib.sh"
+
+evidence stage1-install.txt "Этап 1. Установка ZooKeeper 3.9.6 (вариант Docker)"
+note "# Выбран вариант с Docker: хост — Windows 11, kill -STOP из Git Bash не действует на нативные процессы"
+note "# Windows, поэтому приостановка лидера делается через docker pause (cgroup freezer, аналог SIGSTOP)."
+run "docker version --format 'client={{.Client.Version}} server={{.Server.Version}}'"
+run "docker compose version"
+run "docker pull zookeeper:3.9.6"
+run "docker image inspect zookeeper:3.9.6 --format '{{.Id}} {{index .RepoDigests 0}}'"
+run "docker run --rm zookeeper:3.9.6 java -version"
+run "docker run --rm zookeeper:3.9.6 bash -c 'echo JAVA_HOME=\$JAVA_HOME; ls -d /apache-zookeeper-*'"
+run "docker run --rm zookeeper:3.9.6 zkServer.sh version"
+run "docker image inspect rustfs/rustfs:latest --format '{{index .RepoDigests 0}}'"
+run "docker compose build"

@@ -1,0 +1,9 @@
+zk/*/data/version-2/
+zk/*/data/zookeeper_server.pid
+apache-zookeeper-*
+it_vacancies_2024.csv
+hh*.zip
+__pycache__/
+*.pyc
+.venv/
+.idea/

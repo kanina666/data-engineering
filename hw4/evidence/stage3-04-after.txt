@@ -1,0 +1,213 @@
+# Состояние после возобновления coord-a
+# начато: 2026-11-07 14:49:34.525 UTC
+
+[2026-11-07 14:49:34.654 UTC] $ docker wait coord-a coord-b
+0
+0
+
+[2026-11-07 14:49:54.137 UTC] $ grep -h -E 'состояние сессии|BadVersionError|чекпоинт|записал результат|расчёт завершён' logs/run-nofence/coord-a-20261107-144755-pid1.log
+2026-11-07 14:47:55.887 UTC [coord-a pid=1] WARNING состояние сессии ZooKeeper: CONNECTED
+2026-11-07 14:47:55.938 UTC [coord-a pid=1] INFO чекпоинта нет, начинаю расчёт с начала
+2026-11-07 14:48:24.534 UTC [coord-a pid=1] INFO чекпоинт: блоков=18, смещение=301985088, zk-hw/checkpoints/epoch1-chunk0018.json.gz, /checkpoint version=1
+2026-11-07 14:48:52.391 UTC [coord-a pid=1] INFO чекпоинт: блоков=36, смещение=603978745, zk-hw/checkpoints/epoch1-chunk0036.json.gz, /checkpoint version=2
+2026-11-07 14:49:34.477 UTC [coord-a pid=1] WARNING состояние сессии ZooKeeper: SUSPENDED
+2026-11-07 14:49:34.540 UTC [coord-a pid=1] WARNING состояние сессии ZooKeeper: LOST
+2026-11-07 14:49:34.547 UTC [coord-a pid=1] WARNING состояние сессии ZooKeeper: CONNECTED
+2026-11-07 14:49:53.117 UTC [coord-a pid=1] INFO расчёт завершён, блоков=51; контрольные числа: {"stats": {"rows": 229388, "java": 7206, "java_with_skills": 4870, "java_with_salary": 1386, "java_skills_and_salary": 1074}, "distinct": {"k1": 1376, "k2": 20802, "k3": 137413}, "total": {"k1": 32642, "k2": 129227, "k3": 411399}, "md5": {"k1": "5028d283831e80f676c178cfc3602f61", "k2": "7417abbb8009efa4dc7120d34cd1455c", "k3": "fff609abd28886d217c7bd3e9936812a"}}
+2026-11-07 14:49:53.709 UTC [coord-a pid=1] INFO записал результат: /result version=2, эпоха=1, zk-hw/results/epoch1
+2026-11-07 14:49:53.719 UTC [coord-a pid=1] WARNING состояние сессии ZooKeeper: LOST
+
+[2026-11-07 14:49:54.338 UTC] $ grep -h -E 'стал лидером|продолжил с чекпоинта|записал результат' logs/run-nofence/coord-b-20261107-144757-pid1.log
+2026-11-07 14:49:03.673 UTC [coord-b pid=1] INFO стал лидером, эпоха=2, FENCING=0
+2026-11-07 14:49:04.281 UTC [coord-b pid=1] INFO продолжил с чекпоинта: блоков=36, смещение=603978745, чекпоинт эпохи 1 от coord-a (zk-hw/checkpoints/epoch1-chunk0036.json.gz)
+2026-11-07 14:49:28.175 UTC [coord-b pid=1] INFO записал результат: /result version=1, эпоха=2, zk-hw/results/epoch2
+
+[2026-11-07 14:49:54.493 UTC] $ docker exec zk1 timeout 30 zkCli.sh -waitforconnection -timeout 10000 -server zk1:2181,zk2:2182,zk3:2183 get -s /result
+Connecting to zk1:2181,zk2:2182,zk3:2183
+2026-11-07 14:49:55,307 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:zookeeper.version=3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+2026-11-07 14:49:55,309 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:host.name=zk1
+2026-11-07 14:49:55,309 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.version=17.0.21
+2026-11-07 14:49:55,310 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.vendor=Eclipse Adoptium
+2026-11-07 14:49:55,310 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.home=/opt/java/openjdk
+2026-11-07 14:49:55,310 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.class.path=/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/classes:/apache-zookeeper-3.9.6-bin/bin/../build/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../build/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-prometheus-metrics-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-jute-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/snappy-java-1.1.10.5.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/slf4j-api-2.0.13.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_servlet-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_hotspot-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_common-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-unix-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-epoll-4.1.137.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-classes-epoll-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-classes-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-windows-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-resolver-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-handler-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-codec-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-buffer-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/metrics-core-4.1.12.1.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-core-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-classic-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jline-3.30.14-jdk8.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-ajax-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-servlet-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-server-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-security-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-io-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-http-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/javax.servlet-api-3.1.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-databind-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-core-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-annotations-2.22.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-io-2.17.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-cli-1.5.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/audience-annotations-0.12.0.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/src/main/resources/lib/*.jar:/conf:
+2026-11-07 14:49:55,310 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+2026-11-07 14:49:55,311 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.io.tmpdir=/tmp
+2026-11-07 14:49:55,311 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.compiler=<NA>
+2026-11-07 14:49:55,311 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.name=Linux
+2026-11-07 14:49:55,311 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.arch=amd64
+2026-11-07 14:49:55,311 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.version=6.6.87.2-microsoft-standard-WSL2
+2026-11-07 14:49:55,311 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.name=root
+2026-11-07 14:49:55,312 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.home=/root
+2026-11-07 14:49:55,312 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.dir=/apache-zookeeper-3.9.6-bin
+2026-11-07 14:49:55,312 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.free=234MB
+2026-11-07 14:49:55,312 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.max=256MB
+2026-11-07 14:49:55,312 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.total=248MB
+2026-11-07 14:49:55,315 [myid:] - INFO  [main:o.a.z.ZooKeeper@635] - Initiating client connection, connectString=zk1:2181,zk2:2182,zk3:2183 sessionTimeout=10000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@20d3d15a
+2026-11-07 14:49:55,320 [myid:] - INFO  [main:o.a.z.c.X509Util@84] - Setting -D jdk.tls.rejectClientInitiatedRenegotiation=true to disable client-initiated TLS renegotiation
+2026-11-07 14:49:55,327 [myid:] - INFO  [main:o.a.z.ClientCnxnSocket@235] - jute.maxbuffer value is 1048575 Bytes
+2026-11-07 14:49:55,333 [myid:] - INFO  [main:o.a.z.ClientCnxn@1734] - zookeeper.request.timeout value is 0. feature enabled=false
+2026-11-07 14:49:55,340 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1170] - Opening socket connection to server zk2/172.26.0.4:2182.
+2026-11-07 14:49:55,341 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1172] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+2026-11-07 14:49:55,348 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1006] - Socket connection established, initiating session, client: /172.26.0.3:40872, server: zk2/172.26.0.4:2182
+2026-11-07 14:49:55,359 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1438] - Session establishment complete on server zk2/172.26.0.4:2182, session id = 0x2000af59d600010, negotiated timeout = 10000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null zxid: -1
+{"epoch": 1, "by": "coord-a", "prefix": "zk-hw/results/epoch1", "control": {"stats": {"rows": 229388, "java": 7206, "java_with_skills": 4870, "java_with_salary": 1386, "java_skills_and_salary": 1074}, "distinct": {"k1": 1376, "k2": 20802, "k3": 137413}, "total": {"k1": 32642, "k2": 129227, "k3": 411399}, "md5": {"k1": "5028d283831e80f676c178cfc3602f61", "k2": "7417abbb8009efa4dc7120d34cd1455c", "k3": "fff609abd28886d217c7bd3e9936812a"}}}
+cZxid = 0x300000084
+ctime = Sat Nov 07 14:47:55 UTC 2026
+mZxid = 0x3000000a0
+mtime = Sat Nov 07 14:49:53 UTC 2026
+pZxid = 0x300000084
+cversion = 0
+dataVersion = 2
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 441
+numChildren = 0
+2026-11-07 14:49:55,379 [myid:] - INFO  [main:o.a.z.u.ServiceUtils@45] - Exiting JVM with code 0
+
+[2026-11-07 14:49:55.814 UTC] $ docker exec zk1 timeout 30 zkCli.sh -waitforconnection -timeout 10000 -server zk1:2181,zk2:2182,zk3:2183 stat /result
+Connecting to zk1:2181,zk2:2182,zk3:2183
+2026-11-07 14:49:56,513 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:zookeeper.version=3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+2026-11-07 14:49:56,516 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:host.name=zk1
+2026-11-07 14:49:56,516 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.version=17.0.21
+2026-11-07 14:49:56,516 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.vendor=Eclipse Adoptium
+2026-11-07 14:49:56,516 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.home=/opt/java/openjdk
+2026-11-07 14:49:56,517 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.class.path=/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/classes:/apache-zookeeper-3.9.6-bin/bin/../build/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../build/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-prometheus-metrics-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-jute-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/snappy-java-1.1.10.5.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/slf4j-api-2.0.13.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_servlet-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_hotspot-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_common-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-unix-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-epoll-4.1.137.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-classes-epoll-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-classes-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-windows-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-resolver-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-handler-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-codec-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-buffer-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/metrics-core-4.1.12.1.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-core-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-classic-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jline-3.30.14-jdk8.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-ajax-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-servlet-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-server-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-security-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-io-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-http-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/javax.servlet-api-3.1.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-databind-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-core-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-annotations-2.22.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-io-2.17.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-cli-1.5.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/audience-annotations-0.12.0.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/src/main/resources/lib/*.jar:/conf:
+2026-11-07 14:49:56,517 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+2026-11-07 14:49:56,517 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.io.tmpdir=/tmp
+2026-11-07 14:49:56,517 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.compiler=<NA>
+2026-11-07 14:49:56,518 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.name=Linux
+2026-11-07 14:49:56,518 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.arch=amd64
+2026-11-07 14:49:56,518 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.version=6.6.87.2-microsoft-standard-WSL2
+2026-11-07 14:49:56,518 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.name=root
+2026-11-07 14:49:56,518 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.home=/root
+2026-11-07 14:49:56,519 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.dir=/apache-zookeeper-3.9.6-bin
+2026-11-07 14:49:56,519 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.free=234MB
+2026-11-07 14:49:56,519 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.max=256MB
+2026-11-07 14:49:56,519 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.total=248MB
+2026-11-07 14:49:56,521 [myid:] - INFO  [main:o.a.z.ZooKeeper@635] - Initiating client connection, connectString=zk1:2181,zk2:2182,zk3:2183 sessionTimeout=10000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@20d3d15a
+2026-11-07 14:49:56,526 [myid:] - INFO  [main:o.a.z.c.X509Util@84] - Setting -D jdk.tls.rejectClientInitiatedRenegotiation=true to disable client-initiated TLS renegotiation
+2026-11-07 14:49:56,531 [myid:] - INFO  [main:o.a.z.ClientCnxnSocket@235] - jute.maxbuffer value is 1048575 Bytes
+2026-11-07 14:49:56,536 [myid:] - INFO  [main:o.a.z.ClientCnxn@1734] - zookeeper.request.timeout value is 0. feature enabled=false
+2026-11-07 14:49:56,540 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1170] - Opening socket connection to server zk1/172.26.0.3:2181.
+2026-11-07 14:49:56,541 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1172] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+2026-11-07 14:49:56,549 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1006] - Socket connection established, initiating session, client: /172.26.0.3:52930, server: zk1/172.26.0.3:2181
+2026-11-07 14:49:56,556 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1438] - Session establishment complete on server zk1/172.26.0.3:2181, session id = 0x1000af59d600014, negotiated timeout = 10000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null zxid: -1
+cZxid = 0x300000084
+ctime = Sat Nov 07 14:47:55 UTC 2026
+mZxid = 0x3000000a0
+mtime = Sat Nov 07 14:49:53 UTC 2026
+pZxid = 0x300000084
+cversion = 0
+dataVersion = 2
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 441
+numChildren = 0
+2026-11-07 14:49:56,573 [myid:] - INFO  [main:o.a.z.u.ServiceUtils@45] - Exiting JVM with code 0
+
+[2026-11-07 14:49:56.996 UTC] $ docker exec zk1 timeout 30 zkCli.sh -waitforconnection -timeout 10000 -server zk1:2181,zk2:2182,zk3:2183 get -s /epoch
+Connecting to zk1:2181,zk2:2182,zk3:2183
+2026-11-07 14:49:57,653 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:zookeeper.version=3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+2026-11-07 14:49:57,655 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:host.name=zk1
+2026-11-07 14:49:57,655 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.version=17.0.21
+2026-11-07 14:49:57,656 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.vendor=Eclipse Adoptium
+2026-11-07 14:49:57,656 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.home=/opt/java/openjdk
+2026-11-07 14:49:57,656 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.class.path=/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/classes:/apache-zookeeper-3.9.6-bin/bin/../build/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../build/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-prometheus-metrics-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-jute-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/snappy-java-1.1.10.5.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/slf4j-api-2.0.13.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_servlet-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_hotspot-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_common-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-unix-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-epoll-4.1.137.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-classes-epoll-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-classes-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-windows-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-resolver-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-handler-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-codec-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-buffer-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/metrics-core-4.1.12.1.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-core-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-classic-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jline-3.30.14-jdk8.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-ajax-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-servlet-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-server-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-security-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-io-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-http-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/javax.servlet-api-3.1.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-databind-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-core-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-annotations-2.22.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-io-2.17.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-cli-1.5.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/audience-annotations-0.12.0.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/src/main/resources/lib/*.jar:/conf:
+2026-11-07 14:49:57,656 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+2026-11-07 14:49:57,657 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.io.tmpdir=/tmp
+2026-11-07 14:49:57,657 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.compiler=<NA>
+2026-11-07 14:49:57,657 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.name=Linux
+2026-11-07 14:49:57,657 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.arch=amd64
+2026-11-07 14:49:57,658 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.version=6.6.87.2-microsoft-standard-WSL2
+2026-11-07 14:49:57,658 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.name=root
+2026-11-07 14:49:57,658 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.home=/root
+2026-11-07 14:49:57,659 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.dir=/apache-zookeeper-3.9.6-bin
+2026-11-07 14:49:57,659 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.free=234MB
+2026-11-07 14:49:57,659 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.max=256MB
+2026-11-07 14:49:57,660 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.total=248MB
+2026-11-07 14:49:57,662 [myid:] - INFO  [main:o.a.z.ZooKeeper@635] - Initiating client connection, connectString=zk1:2181,zk2:2182,zk3:2183 sessionTimeout=10000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@20d3d15a
+2026-11-07 14:49:57,670 [myid:] - INFO  [main:o.a.z.c.X509Util@84] - Setting -D jdk.tls.rejectClientInitiatedRenegotiation=true to disable client-initiated TLS renegotiation
+2026-11-07 14:49:57,686 [myid:] - INFO  [main:o.a.z.ClientCnxnSocket@235] - jute.maxbuffer value is 1048575 Bytes
+2026-11-07 14:49:57,718 [myid:] - INFO  [main:o.a.z.ClientCnxn@1734] - zookeeper.request.timeout value is 0. feature enabled=false
+2026-11-07 14:49:57,737 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1170] - Opening socket connection to server zk2/172.26.0.4:2182.
+2026-11-07 14:49:57,738 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1172] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+2026-11-07 14:49:57,755 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1006] - Socket connection established, initiating session, client: /172.26.0.3:40876, server: zk2/172.26.0.4:2182
+2026-11-07 14:49:57,777 [myid:zk2:2182] - INFO  [main-SendThread(zk2:2182):o.a.z.ClientCnxn$SendThread@1438] - Session establishment complete on server zk2/172.26.0.4:2182, session id = 0x2000af59d600011, negotiated timeout = 10000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null zxid: -1
+2
+cZxid = 0x300000082
+ctime = Sat Nov 07 14:47:55 UTC 2026
+mZxid = 0x30000009a
+mtime = Sat Nov 07 14:49:03 UTC 2026
+pZxid = 0x300000082
+cversion = 0
+dataVersion = 2
+aclVersion = 0
+ephemeralOwner = 0x0
+dataLength = 1
+numChildren = 0
+2026-11-07 14:49:57,815 [myid:] - INFO  [main:o.a.z.u.ServiceUtils@45] - Exiting JVM with code 0
+
+[2026-11-07 14:49:58.366 UTC] $ docker exec zk1 timeout 30 zkCli.sh -waitforconnection -timeout 10000 -server zk1:2181,zk2:2182,zk3:2183 get /checkpoint
+Connecting to zk1:2181,zk2:2182,zk3:2183
+2026-11-07 14:49:59,941 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:zookeeper.version=3.9.6-a355171b081b5b60749db8f19cca1528b0df936f, built on 2026-09-03 19:29 UTC
+2026-11-07 14:49:59,948 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:host.name=zk1
+2026-11-07 14:49:59,962 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.version=17.0.21
+2026-11-07 14:49:59,965 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.vendor=Eclipse Adoptium
+2026-11-07 14:49:59,966 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.home=/opt/java/openjdk
+2026-11-07 14:49:59,978 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.class.path=/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/classes:/apache-zookeeper-3.9.6-bin/bin/../build/classes:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-metrics-providers/zookeeper-prometheus-metrics/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/target/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../build/lib/*.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-prometheus-metrics-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-jute-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/zookeeper-3.9.6.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/snappy-java-1.1.10.5.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/slf4j-api-2.0.13.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_servlet-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_hotspot-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient_common-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/simpleclient-0.9.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-unix-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-native-epoll-4.1.137.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-classes-epoll-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-transport-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-classes-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-windows-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-osx-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-x86_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final-linux-aarch_64.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-tcnative-boringssl-static-2.0.81.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-resolver-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-handler-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-common-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-codec-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/netty-buffer-4.1.137.Final.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/metrics-core-4.1.12.1.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-core-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/logback-classic-1.3.15.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jline-3.30.14-jdk8.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-ajax-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-util-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-servlet-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-server-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-security-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-io-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jetty-http-9.4.58.v20250814.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/javax.servlet-api-3.1.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-databind-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-core-2.22.2.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/jackson-annotations-2.22.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-io-2.17.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/commons-cli-1.5.0.jar:/apache-zookeeper-3.9.6-bin/bin/../lib/audience-annotations-0.12.0.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-*.jar:/apache-zookeeper-3.9.6-bin/bin/../zookeeper-server/src/main/resources/lib/*.jar:/conf:
+2026-11-07 14:49:59,978 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.library.path=/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+2026-11-07 14:49:59,979 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.io.tmpdir=/tmp
+2026-11-07 14:49:59,979 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:java.compiler=<NA>
+2026-11-07 14:49:59,979 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.name=Linux
+2026-11-07 14:49:59,979 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.arch=amd64
+2026-11-07 14:49:59,980 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.version=6.6.87.2-microsoft-standard-WSL2
+2026-11-07 14:49:59,980 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.name=root
+2026-11-07 14:49:59,980 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.home=/root
+2026-11-07 14:49:59,980 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:user.dir=/apache-zookeeper-3.9.6-bin
+2026-11-07 14:49:59,980 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.free=234MB
+2026-11-07 14:49:59,981 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.max=256MB
+2026-11-07 14:49:59,981 [myid:] - INFO  [main:o.a.z.Environment@98] - Client environment:os.memory.total=248MB
+2026-11-07 14:49:59,983 [myid:] - INFO  [main:o.a.z.ZooKeeper@635] - Initiating client connection, connectString=zk1:2181,zk2:2182,zk3:2183 sessionTimeout=10000 watcher=org.apache.zookeeper.ZooKeeperMain$MyWatcher@20d3d15a
+2026-11-07 14:49:59,999 [myid:] - INFO  [main:o.a.z.c.X509Util@84] - Setting -D jdk.tls.rejectClientInitiatedRenegotiation=true to disable client-initiated TLS renegotiation
+2026-11-07 14:50:00,008 [myid:] - INFO  [main:o.a.z.ClientCnxnSocket@235] - jute.maxbuffer value is 1048575 Bytes
+2026-11-07 14:50:00,027 [myid:] - INFO  [main:o.a.z.ClientCnxn@1734] - zookeeper.request.timeout value is 0. feature enabled=false
+2026-11-07 14:50:00,033 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1170] - Opening socket connection to server zk1/172.26.0.3:2181.
+2026-11-07 14:50:00,034 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1172] - SASL config status: Will not attempt to authenticate using SASL (unknown error)
+2026-11-07 14:50:00,051 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1006] - Socket connection established, initiating session, client: /172.26.0.3:52934, server: zk1/172.26.0.3:2181
+2026-11-07 14:50:00,096 [myid:zk1:2181] - INFO  [main-SendThread(zk1:2181):o.a.z.ClientCnxn$SendThread@1438] - Session establishment complete on server zk1/172.26.0.3:2181, session id = 0x1000af59d600015, negotiated timeout = 10000
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null zxid: -1
+{"epoch": 1, "by": "coord-a", "chunks": 36, "pos": 603978745, "key": "zk-hw/checkpoints/epoch1-chunk0036.json.gz"}
+2026-11-07 14:50:00,118 [myid:] - INFO  [main:o.a.z.u.ServiceUtils@45] - Exiting JVM with code 0
+# Сессия лидера 0x3000af59d43000c в журналах серверов ZooKeeper: создание, истечение по таймауту, отказ после возобновления
+
+[2026-11-07 14:50:01.510 UTC] $ for s in zk1 zk2 zk3; do docker logs $s 2>&1 | grep -F '0x3000af59d43000c' | sed "s/^/$s: /"; done
+zk1: 2026-11-07 14:47:55,886 [myid:] - INFO  [CommitProcessor:1:o.a.z.s.q.LearnerSessionTracker@116] - Committing global session 0x3000af59d43000c
+zk1: 2026-11-07 14:49:34,533 [myid:] - INFO  [NIOWorkerThread-8:o.a.z.s.q.Learner@165] - Revalidating client: 0x3000af59d43000c
+zk1: 2026-11-07 14:49:34,534 [myid:] - INFO  [QuorumPeer[myid=1](plain=[0:0:0:0:0:0:0:0]:2181)(secure=disabled):o.a.z.s.ZooKeeperServer@1177] - Invalid session 0x3000af59d43000c for client /172.26.0.6:38196, probably expired
+zk2: 2026-11-07 14:47:55,886 [myid:] - INFO  [CommitProcessor:2:o.a.z.s.q.LeaderSessionTracker@104] - Committing global session 0x3000af59d43000c
+zk2: 2026-11-07 14:49:03,659 [myid:] - INFO  [SessionTracker:o.a.z.s.ZooKeeperServer@730] - Expiring session 0x3000af59d43000c, timeout of 10000ms exceeded
+zk2: 2026-11-07 14:49:03,660 [myid:] - INFO  [RequestThrottler:o.a.z.s.q.QuorumZooKeeperServer@156] - Submitting global closeSession request for session 0x3000af59d43000c
+zk3: 2026-11-07 14:47:55,886 [myid:] - INFO  [CommitProcessor:3:o.a.z.s.q.LearnerSessionTracker@116] - Committing global session 0x3000af59d43000c
+СОБЫТИЕ session_expired_utc=2026-11-07 14:49:03.659
+
+[2026-11-07 14:50:03.472 UTC] $ ls -la logs/run-nofence
+total 16
+drwxr-xr-x 1 ninak 197121    0 Nov  7 17:47 .
+drwxr-xr-x 1 ninak 197121    0 Nov  7 17:47 ..
+-rw-r--r-- 1 ninak 197121 8613 Nov  7 17:49 coord-a-20261107-144755-pid1.log
+-rw-r--r-- 1 ninak 197121 3788 Nov  7 17:49 coord-b-20261107-144757-pid1.log
