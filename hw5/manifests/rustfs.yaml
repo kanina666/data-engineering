@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hw5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rustfs
+  namespace: hw5
+spec:
+  selector:
+    app: hw5-rustfs
+  ports:
+    - port: 9000
+      targetPort: s3
+      name: s3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rustfs
+  namespace: hw5
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: hw5-rustfs
+  template:
+    metadata:
+      labels:
+        app: hw5-rustfs
+    spec:
+      securityContext:
+        fsGroup: 10001
+      containers:
+        - name: rustfs
+          image: hw5-rustfs:hw2
+          imagePullPolicy: Never
+          ports:
+            - name: s3
+              containerPort: 9000
+          readinessProbe:
+            tcpSocket:
+              port: s3
+          env:
+            - name: RUSTFS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef: {name: s3-credentials, key: AWS_ACCESS_KEY_ID}
+            - name: RUSTFS_SECRET_KEY
+              valueFrom:
+                secretKeyRef: {name: s3-credentials, key: AWS_SECRET_ACCESS_KEY}
+            - name: RUSTFS_UNSAFE_BYPASS_DISK_CHECK
+              value: "true"
+            - name: RUSTFS_VOLUMES
+              value: /data/disk{1...4}
+          resources:
+            requests: {cpu: 100m, memory: 128Mi}
+            limits: {cpu: "2", memory: 1024Mi}
+          volumeMounts:
+            - {name: disk1, mountPath: /data/disk1}
+            - {name: disk2, mountPath: /data/disk2}
+            - {name: disk3, mountPath: /data/disk3}
+            - {name: disk4, mountPath: /data/disk4}
+      volumes:
+        - {name: disk1, emptyDir: {}}
+        - {name: disk2, emptyDir: {}}
+        - {name: disk3, emptyDir: {}}
+        - {name: disk4, emptyDir: {}}

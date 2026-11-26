@@ -1,0 +1,42 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 323B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-slim
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context:
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 11.15kB 0.0s done
+#4 DONE 0.0s
+
+#5 [1/5] FROM docker.io/library/python:3.11-slim@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff
+#5 resolve docker.io/library/python:3.11-slim@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff 0.1s done
+#5 DONE 0.1s
+
+#6 [2/5] WORKDIR /app
+#6 CACHED
+
+#7 [3/5] RUN pip install --no-cache-dir boto3==1.43.83
+#7 CACHED
+
+#8 [4/5] COPY hw3/config.py hw3/mapreduce.py hw3/vac.py /app/hw3/
+#8 CACHED
+
+#9 [5/5] COPY hw5/scripts/pipeline.py /app/
+#9 DONE 0.1s
+
+#10 exporting to image
+#10 exporting layers 0.1s done
+#10 exporting manifest sha256:40642da3f8ccc3b04fe29f6aa663ff4ea0b25a020ef8059560a5e2379900a168 0.0s done
+#10 exporting config sha256:a8a7313c20669695aab2ce19a949e46190fdb0dfaa60177c8341d9a279d7f4d9 0.0s done
+#10 naming to docker.io/library/hw5-pairs:v1 done
+#10 unpacking to docker.io/library/hw5-pairs:v1 0.1s done
+#10 DONE 0.3s
+

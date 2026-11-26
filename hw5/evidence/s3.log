@@ -1,0 +1,20 @@
+$ kubectl --context kind-hw5 apply -f .\hw5\manifests\rustfs.yaml
+namespace/hw5 unchanged
+service/rustfs unchanged
+deployment.apps/rustfs configured
+$ kubectl --context kind-hw5 apply -f -
+secret/s3-credentials configured
+$ kubectl --context kind-hw5 -n hw5 rollout status deployment/rustfs --timeout=120s
+deployment "rustfs" successfully rolled out
+$ kubectl --context kind-hw5 -n hw5 get pods,svc -o wide
+NAME                          READY   STATUS    RESTARTS   AGE    IP           NODE                NOMINATED NODE   READINESS GATES
+pod/rustfs-6947c8cbcf-h2zgw   1/1     Running   0          4m7s   10.244.0.5   hw5-control-plane   <none>           <none>
+
+NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE    SELECTOR
+service/rustfs   ClusterIP   10.96.241.18   <none>        9000/TCP   4m7s   app=hw5-rustfs
+$ kubectl --context kind-hw5 -n hw5 port-forward --address=127.0.0.1 service/rustfs 19050:9000
+$ python -u .\hw5\scripts\pipeline.py ingest --source-endpoint http://127.0.0.1:19051
+downloaded source s3://vacancies/dataset/it_vacancies_2024.csv via http://127.0.0.1:19051 (847619384 bytes)
+local bytes=847619384 md5=45041a115287e29b41fc8f82818ec5a6 sha256=303db922b541e4440906f5a7e8be32fb55e8808f950ffddb8c272f1548212a65
+s3://vacancies/dataset/it_vacancies_2024.csv sha256=303db922b541e4440906f5a7e8be32fb55e8808f950ffddb8c272f1548212a65 MATCH
+{"header": ["source", "vacancy_id", "status", "snapshot_date", "published_at", "area", "employer_id", "employer_inn", "employer_ogrn", "employer_name", "name", "role", "sphere", "salary_from", "salary_to", "currency", "gross", "experience", "schedule", "employment", "key_skills", "description", "url"], "size": 847619384, "sha256": "303db922b541e4440906f5a7e8be32fb55e8808f950ffddb8c272f1548212a65", "parts": [[0, 105958703], [105958703, 211909622], [211909622, 317857720], [317857720, 423810887], [423810887, 529763672], [529763672, 635715091], [635715091, 741667049], [741667049, 847619384]], "etag": "\"0e6d21890db664d9bf83e1427665b106-13\""}
