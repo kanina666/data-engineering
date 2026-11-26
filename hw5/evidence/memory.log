@@ -1,0 +1,943 @@
+$ kubectl --context kind-hw5 apply -f .\hw5\evidence\memory-low.yaml
+job.batch/memory-low created
+$ kubectl --context kind-hw5 -n hw5 wait --for=condition=failed job/memory-low --timeout=610s
+job.batch/memory-low condition met
+$ kubectl --context kind-hw5 -n hw5 get job memory-low -o wide
+NAME         STATUS   COMPLETIONS   DURATION   AGE   CONTAINERS   IMAGES         SELECTOR
+memory-low   Failed   0/1           6s         6s    pairs        hw5-pairs:v1   batch.kubernetes.io/controller-uid=84d76ea5-5d45-48ea-8976-abc97ff5ea4a
+$ kubectl --context kind-hw5 -n hw5 get pods -l batch.kubernetes.io/job-name=memory-low -o json
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2026-11-26T11:58:34Z",
+                "generateName": "memory-low-",
+                "generation": 1,
+                "labels": {
+                    "batch.kubernetes.io/controller-uid": "84d76ea5-5d45-48ea-8976-abc97ff5ea4a",
+                    "batch.kubernetes.io/job-name": "memory-low",
+                    "controller-uid": "84d76ea5-5d45-48ea-8976-abc97ff5ea4a",
+                    "job-name": "memory-low"
+                },
+                "name": "memory-low-n784w",
+                "namespace": "hw5",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "memory-low",
+                        "uid": "84d76ea5-5d45-48ea-8976-abc97ff5ea4a"
+                    }
+                ],
+                "resourceVersion": "1421",
+                "uid": "a237e848-cecc-4f77-81ca-6f0e71320a0c"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "memory",
+                            "memory-low"
+                        ],
+                        "env": [
+                            {
+                                "name": "S3_ENDPOINT",
+                                "value": "http://rustfs.hw5.svc.cluster.local:9000"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "s3-credentials"
+                                }
+                            }
+                        ],
+                        "image": "hw5-pairs:v1",
+                        "imagePullPolicy": "Never",
+                        "name": "pairs",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "64Mi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "32Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-6qxq8",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "hw5-control-plane",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "kube-api-access-6qxq8",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:58:39Z",
+                        "observedGeneration": 1,
+                        "status": "False",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:58:34Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:58:37Z",
+                        "observedGeneration": 1,
+                        "reason": "PodFailed",
+                        "status": "False",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:58:37Z",
+                        "observedGeneration": 1,
+                        "reason": "PodFailed",
+                        "status": "False",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:58:34Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "250m",
+                            "memory": "32Mi"
+                        },
+                        "containerID": "containerd://7435e20bf99c09ffbd52ed2d72586a2f14bf0386bbf90502dcd2ed53f320a762",
+                        "image": "docker.io/library/hw5-pairs:v1",
+                        "imageID": "sha256:a8a7313c20669695aab2ce19a949e46190fdb0dfaa60177c8341d9a279d7f4d9",
+                        "lastState": {},
+                        "name": "pairs",
+                        "ready": false,
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "64Mi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "32Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": false,
+                        "state": {
+                            "terminated": {
+                                "containerID": "containerd://7435e20bf99c09ffbd52ed2d72586a2f14bf0386bbf90502dcd2ed53f320a762",
+                                "exitCode": 137,
+                                "finishedAt": "2026-11-26T11:58:36Z",
+                                "reason": "OOMKilled",
+                                "startedAt": "2026-11-26T11:58:35Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 0,
+                                "supplementalGroups": [
+                                    0
+                                ],
+                                "uid": 0
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-6qxq8",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "172.29.0.2",
+                "hostIPs": [
+                    {
+                        "ip": "172.29.0.2"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Failed",
+                "podIP": "10.244.0.21",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.21"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2026-11-26T11:58:34Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+$ kubectl --context kind-hw5 -n hw5 logs memory-low-n784w
+$ kubectl --context kind-hw5 -n hw5 get events --field-selector involvedObject.name=memory-low-n784w
+LAST SEEN   TYPE     REASON      OBJECT                 MESSAGE
+6s          Normal   Scheduled   pod/memory-low-n784w   Successfully assigned hw5/memory-low-n784w to hw5-control-plane
+5s          Normal   Pulled      pod/memory-low-n784w   Container image "hw5-pairs:v1" already present on machine and can be accessed by the pod
+5s          Normal   Created     pod/memory-low-n784w   Container created
+5s          Normal   Started     pod/memory-low-n784w   Container started
+$ kubectl --context kind-hw5 apply -f .\hw5\evidence\memory-measure.yaml
+job.batch/memory-measure created
+$ kubectl --context kind-hw5 -n hw5 wait --for=condition=complete job/memory-measure --timeout=610s
+job.batch/memory-measure condition met
+$ kubectl --context kind-hw5 -n hw5 get job memory-measure -o wide
+NAME             STATUS     COMPLETIONS   DURATION   AGE   CONTAINERS   IMAGES         SELECTOR
+memory-measure   Complete   1/1           29s        29s   pairs        hw5-pairs:v1   batch.kubernetes.io/controller-uid=61b54296-a2df-4406-b483-74b6fb6f4e40
+$ kubectl --context kind-hw5 -n hw5 get pods -l batch.kubernetes.io/job-name=memory-measure -o json
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2026-11-26T11:58:41Z",
+                "generateName": "memory-measure-",
+                "generation": 1,
+                "labels": {
+                    "batch.kubernetes.io/controller-uid": "61b54296-a2df-4406-b483-74b6fb6f4e40",
+                    "batch.kubernetes.io/job-name": "memory-measure",
+                    "controller-uid": "61b54296-a2df-4406-b483-74b6fb6f4e40",
+                    "job-name": "memory-measure"
+                },
+                "name": "memory-measure-w58tf",
+                "namespace": "hw5",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "memory-measure",
+                        "uid": "61b54296-a2df-4406-b483-74b6fb6f4e40"
+                    }
+                ],
+                "resourceVersion": "1478",
+                "uid": "964b728a-2a22-4dc4-94e1-8ac566852b7d"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "memory",
+                            "memory-measure"
+                        ],
+                        "env": [
+                            {
+                                "name": "S3_ENDPOINT",
+                                "value": "http://rustfs.hw5.svc.cluster.local:9000"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "s3-credentials"
+                                }
+                            }
+                        ],
+                        "image": "hw5-pairs:v1",
+                        "imagePullPolicy": "Never",
+                        "name": "pairs",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-k6gpt",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "hw5-control-plane",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "kube-api-access-k6gpt",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:09Z",
+                        "observedGeneration": 1,
+                        "status": "False",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:58:41Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:08Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "False",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:08Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "False",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:58:41Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "250m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://d9075c25f1425d99ebf14a0638b8544b7614bf2e01edb098a1b108e5fc5613a5",
+                        "image": "docker.io/library/hw5-pairs:v1",
+                        "imageID": "sha256:a8a7313c20669695aab2ce19a949e46190fdb0dfaa60177c8341d9a279d7f4d9",
+                        "lastState": {},
+                        "name": "pairs",
+                        "ready": false,
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "1Gi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": false,
+                        "state": {
+                            "terminated": {
+                                "containerID": "containerd://d9075c25f1425d99ebf14a0638b8544b7614bf2e01edb098a1b108e5fc5613a5",
+                                "exitCode": 0,
+                                "finishedAt": "2026-11-26T11:59:07Z",
+                                "reason": "Completed",
+                                "startedAt": "2026-11-26T11:58:42Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 0,
+                                "supplementalGroups": [
+                                    0
+                                ],
+                                "uid": 0
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-k6gpt",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "172.29.0.2",
+                "hostIPs": [
+                    {
+                        "ip": "172.29.0.2"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Succeeded",
+                "podIP": "10.244.0.22",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.22"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2026-11-26T11:58:41Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+$ kubectl --context kind-hw5 -n hw5 logs memory-measure-w58tf
+chunk 0: 15 MB, java so far 143
+chunk 1: 15 MB, java so far 257
+chunk 2: 15 MB, java so far 398
+chunk 3: 16 MB, java so far 526
+chunk 4: 16 MB, java so far 652
+chunk 5: 16 MB, java so far 780
+chunk 6: 15 MB, java so far 899
+chunk 7: 16 MB, java so far 1035
+chunk 8: 15 MB, java so far 1170
+chunk 9: 16 MB, java so far 1275
+chunk 10: 16 MB, java so far 1417
+chunk 11: 15 MB, java so far 1549
+chunk 12: 16 MB, java so far 1703
+chunk 13: 15 MB, java so far 1844
+chunk 14: 16 MB, java so far 1972
+chunk 15: 15 MB, java so far 2100
+chunk 16: 16 MB, java so far 2228
+chunk 17: 15 MB, java so far 2349
+chunk 18: 16 MB, java so far 2501
+chunk 19: 16 MB, java so far 2630
+chunk 20: 15 MB, java so far 2817
+chunk 21: 16 MB, java so far 3026
+chunk 22: 16 MB, java so far 3246
+chunk 23: 15 MB, java so far 3472
+chunk 24: 15 MB, java so far 3688
+chunk 25: 16 MB, java so far 3919
+chunk 26: 16 MB, java so far 4159
+chunk 27: 15 MB, java so far 4407
+chunk 28: 15 MB, java so far 4709
+chunk 29: 16 MB, java so far 4958
+chunk 30: 15 MB, java so far 5089
+chunk 31: 16 MB, java so far 5190
+chunk 32: 16 MB, java so far 5276
+chunk 33: 15 MB, java so far 5386
+chunk 34: 16 MB, java so far 5488
+chunk 35: 15 MB, java so far 5578
+chunk 36: 15 MB, java so far 5684
+chunk 37: 16 MB, java so far 5763
+chunk 38: 15 MB, java so far 5854
+chunk 39: 16 MB, java so far 5983
+chunk 40: 16 MB, java so far 6092
+chunk 41: 16 MB, java so far 6221
+chunk 42: 15 MB, java so far 6327
+chunk 43: 16 MB, java so far 6448
+chunk 44: 15 MB, java so far 6558
+chunk 45: 16 MB, java so far 6674
+chunk 46: 15 MB, java so far 6804
+chunk 47: 15 MB, java so far 6945
+chunk 48: 15 MB, java so far 7036
+chunk 49: 16 MB, java so far 7156
+chunk 50: 8 MB, java so far 7206
+MODE=naive chunk=16MB workers=1 io_threads=1 chunks=51 retries=0 time=23.23s
+stats: {'rows': 229388, 'java': 7206, 'java_with_skills': 4870, 'java_with_salary': 1386, 'java_skills_and_salary': 1074}
+distinct: {'k1': 1376, 'k2': 20802, 'k3': 137413} total: {'k1': 32642, 'k2': 129227, 'k3': 411399}
+peak_bytes=276742144 source=/sys/fs/cgroup/memory.peak limit_bytes=1073741824
+$ kubectl --context kind-hw5 -n hw5 get events --field-selector involvedObject.name=memory-measure-w58tf
+LAST SEEN   TYPE     REASON      OBJECT                     MESSAGE
+29s         Normal   Scheduled   pod/memory-measure-w58tf   Successfully assigned hw5/memory-measure-w58tf to hw5-control-plane
+28s         Normal   Pulled      pod/memory-measure-w58tf   Container image "hw5-pairs:v1" already present on machine and can be accessed by the pod
+28s         Normal   Created     pod/memory-measure-w58tf   Container created
+28s         Normal   Started     pod/memory-measure-w58tf   Container started
+peak_bytes=276742144 peak_MiB=263.922 margin_MiB=52.784 working_limit_MiB=317
+$ kubectl --context kind-hw5 apply -f .\hw5\evidence\memory-working.yaml
+job.batch/memory-working created
+$ kubectl --context kind-hw5 -n hw5 wait --for=condition=complete job/memory-working --timeout=610s
+job.batch/memory-working condition met
+$ kubectl --context kind-hw5 -n hw5 get job memory-working -o wide
+NAME             STATUS     COMPLETIONS   DURATION   AGE   CONTAINERS   IMAGES         SELECTOR
+memory-working   Complete   1/1           29s        29s   pairs        hw5-pairs:v1   batch.kubernetes.io/controller-uid=0465e051-03af-4185-8410-ad96b61148e7
+$ kubectl --context kind-hw5 -n hw5 get pods -l batch.kubernetes.io/job-name=memory-working -o json
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2026-11-26T11:59:11Z",
+                "generateName": "memory-working-",
+                "generation": 1,
+                "labels": {
+                    "batch.kubernetes.io/controller-uid": "0465e051-03af-4185-8410-ad96b61148e7",
+                    "batch.kubernetes.io/job-name": "memory-working",
+                    "controller-uid": "0465e051-03af-4185-8410-ad96b61148e7",
+                    "job-name": "memory-working"
+                },
+                "name": "memory-working-cx6ld",
+                "namespace": "hw5",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "memory-working",
+                        "uid": "0465e051-03af-4185-8410-ad96b61148e7"
+                    }
+                ],
+                "resourceVersion": "1536",
+                "uid": "89a4d67a-746d-418a-99e9-88eccca224fe"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "memory",
+                            "memory-working"
+                        ],
+                        "env": [
+                            {
+                                "name": "S3_ENDPOINT",
+                                "value": "http://rustfs.hw5.svc.cluster.local:9000"
+                            }
+                        ],
+                        "envFrom": [
+                            {
+                                "secretRef": {
+                                    "name": "s3-credentials"
+                                }
+                            }
+                        ],
+                        "image": "hw5-pairs:v1",
+                        "imagePullPolicy": "Never",
+                        "name": "pairs",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "317Mi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-qhr7n",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "hw5-control-plane",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "kube-api-access-qhr7n",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:39Z",
+                        "observedGeneration": 1,
+                        "status": "False",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:11Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:38Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "False",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:38Z",
+                        "observedGeneration": 1,
+                        "reason": "PodCompleted",
+                        "status": "False",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-26T11:59:11Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "250m",
+                            "memory": "128Mi"
+                        },
+                        "containerID": "containerd://6f71a06556f5ee563dfe4f6a005389cdf8df07a3c706a444098077b4dc396086",
+                        "image": "docker.io/library/hw5-pairs:v1",
+                        "imageID": "sha256:a8a7313c20669695aab2ce19a949e46190fdb0dfaa60177c8341d9a279d7f4d9",
+                        "lastState": {},
+                        "name": "pairs",
+                        "ready": false,
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "317Mi"
+                            },
+                            "requests": {
+                                "cpu": "250m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": false,
+                        "state": {
+                            "terminated": {
+                                "containerID": "containerd://6f71a06556f5ee563dfe4f6a005389cdf8df07a3c706a444098077b4dc396086",
+                                "exitCode": 0,
+                                "finishedAt": "2026-11-26T11:59:37Z",
+                                "reason": "Completed",
+                                "startedAt": "2026-11-26T11:59:11Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 0,
+                                "supplementalGroups": [
+                                    0
+                                ],
+                                "uid": 0
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-qhr7n",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "172.29.0.2",
+                "hostIPs": [
+                    {
+                        "ip": "172.29.0.2"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Succeeded",
+                "podIP": "10.244.0.23",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.23"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2026-11-26T11:59:11Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+$ kubectl --context kind-hw5 -n hw5 logs memory-working-cx6ld
+chunk 0: 15 MB, java so far 143
+chunk 1: 15 MB, java so far 257
+chunk 2: 15 MB, java so far 398
+chunk 3: 16 MB, java so far 526
+chunk 4: 16 MB, java so far 652
+chunk 5: 16 MB, java so far 780
+chunk 6: 15 MB, java so far 899
+chunk 7: 16 MB, java so far 1035
+chunk 8: 15 MB, java so far 1170
+chunk 9: 16 MB, java so far 1275
+chunk 10: 16 MB, java so far 1417
+chunk 11: 15 MB, java so far 1549
+chunk 12: 16 MB, java so far 1703
+chunk 13: 15 MB, java so far 1844
+chunk 14: 16 MB, java so far 1972
+chunk 15: 15 MB, java so far 2100
+chunk 16: 16 MB, java so far 2228
+chunk 17: 15 MB, java so far 2349
+chunk 18: 16 MB, java so far 2501
+chunk 19: 16 MB, java so far 2630
+chunk 20: 15 MB, java so far 2817
+chunk 21: 16 MB, java so far 3026
+chunk 22: 16 MB, java so far 3246
+chunk 23: 15 MB, java so far 3472
+chunk 24: 15 MB, java so far 3688
+chunk 25: 16 MB, java so far 3919
+chunk 26: 16 MB, java so far 4159
+chunk 27: 15 MB, java so far 4407
+chunk 28: 15 MB, java so far 4709
+chunk 29: 16 MB, java so far 4958
+chunk 30: 15 MB, java so far 5089
+chunk 31: 16 MB, java so far 5190
+chunk 32: 16 MB, java so far 5276
+chunk 33: 15 MB, java so far 5386
+chunk 34: 16 MB, java so far 5488
+chunk 35: 15 MB, java so far 5578
+chunk 36: 15 MB, java so far 5684
+chunk 37: 16 MB, java so far 5763
+chunk 38: 15 MB, java so far 5854
+chunk 39: 16 MB, java so far 5983
+chunk 40: 16 MB, java so far 6092
+chunk 41: 16 MB, java so far 6221
+chunk 42: 15 MB, java so far 6327
+chunk 43: 16 MB, java so far 6448
+chunk 44: 15 MB, java so far 6558
+chunk 45: 16 MB, java so far 6674
+chunk 46: 15 MB, java so far 6804
+chunk 47: 15 MB, java so far 6945
+chunk 48: 15 MB, java so far 7036
+chunk 49: 16 MB, java so far 7156
+chunk 50: 8 MB, java so far 7206
+MODE=naive chunk=16MB workers=1 io_threads=1 chunks=51 retries=0 time=23.73s
+stats: {'rows': 229388, 'java': 7206, 'java_with_skills': 4870, 'java_with_salary': 1386, 'java_skills_and_salary': 1074}
+distinct: {'k1': 1376, 'k2': 20802, 'k3': 137413} total: {'k1': 32642, 'k2': 129227, 'k3': 411399}
+peak_bytes=259805184 source=/sys/fs/cgroup/memory.peak limit_bytes=332398592
+$ kubectl --context kind-hw5 -n hw5 get events --field-selector involvedObject.name=memory-working-cx6ld
+LAST SEEN   TYPE     REASON      OBJECT                     MESSAGE
+29s         Normal   Scheduled   pod/memory-working-cx6ld   Successfully assigned hw5/memory-working-cx6ld to hw5-control-plane
+29s         Normal   Pulled      pod/memory-working-cx6ld   Container image "hw5-pairs:v1" already present on machine and can be accessed by the pod
+29s         Normal   Created     pod/memory-working-cx6ld   Container created
+29s         Normal   Started     pod/memory-working-cx6ld   Container started
+$ python .\hw5\scripts\pipeline.py fetch hw5/memory-working/top.csv .\hw5\results\single.csv
+$ python .\hw5\scripts\pipeline.py compare .\hw5\results\reference.csv .\hw5\results\single.csv
+reference_rows=10 actual_rows=10
+MATCH (1, 'Java', 'Spring Framework', 2081) | (1, 'Java', 'Spring Framework', 2081)
+MATCH (2, 'Java', 'PostgreSQL', 1773) | (2, 'Java', 'PostgreSQL', 1773)
+MATCH (3, 'Java', 'SQL', 1348) | (3, 'Java', 'SQL', 1348)
+MATCH (4, 'PostgreSQL', 'Spring Framework', 1159) | (4, 'PostgreSQL', 'Spring Framework', 1159)
+MATCH (5, 'Git', 'Java', 1091) | (5, 'Git', 'Java', 1091)
+MATCH (6, 'Java', 'Spring Boot', 967) | (6, 'Java', 'Spring Boot', 967)
+MATCH (7, 'Java', 'Kafka', 922) | (7, 'Java', 'Kafka', 922)
+MATCH (8, 'Docker', 'Java', 694) | (8, 'Docker', 'Java', 694)
+MATCH (9, 'Git', 'Spring Framework', 668) | (9, 'Git', 'Spring Framework', 668)
+MATCH (10, 'Hibernate ORM', 'Java', 659) | (10, 'Hibernate ORM', 'Java', 659)
+RESULT: 10/10 MATCH

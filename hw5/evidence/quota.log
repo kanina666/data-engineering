@@ -1,0 +1,62 @@
+$ kubectl --context kind-hw5 apply -f .\hw5\manifests\quota.yaml
+namespace/hw5-quota created
+resourcequota/budget created
+$ kubectl --context kind-hw5 -n hw5-quota get resourcequota budget -o json
+{
+    "apiVersion": "v1",
+    "kind": "ResourceQuota",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"ResourceQuota\",\"metadata\":{\"annotations\":{},\"name\":\"budget\",\"namespace\":\"hw5-quota\"},\"spec\":{\"hard\":{\"limits.cpu\":\"600m\",\"limits.memory\":\"256Mi\",\"pods\":\"2\",\"requests.cpu\":\"500m\",\"requests.memory\":\"128Mi\"}}}\n"
+        },
+        "creationTimestamp": "2026-11-26T11:54:55Z",
+        "name": "budget",
+        "namespace": "hw5-quota",
+        "resourceVersion": "958",
+        "uid": "c0876f57-0c94-4a24-9bf0-e30f182f3419"
+    },
+    "spec": {
+        "hard": {
+            "limits.cpu": "600m",
+            "limits.memory": "256Mi",
+            "pods": "2",
+            "requests.cpu": "500m",
+            "requests.memory": "128Mi"
+        }
+    },
+    "status": {
+        "hard": {
+            "limits.cpu": "600m",
+            "limits.memory": "256Mi",
+            "pods": "2",
+            "requests.cpu": "500m",
+            "requests.memory": "128Mi"
+        },
+        "used": {
+            "limits.cpu": "0",
+            "limits.memory": "0",
+            "pods": "0",
+            "requests.cpu": "0",
+            "requests.memory": "0"
+        }
+    }
+}
+$ kubectl --context kind-hw5 apply -f .\hw5\evidence\quota-ok.yaml
+pod/quota-ok created
+$ kubectl --context kind-hw5 -n hw5-quota wait --for=condition=Ready pod/quota-ok --timeout=120s
+pod/quota-ok condition met
+$ kubectl --context kind-hw5 -n hw5-quota get pod quota-ok -o wide
+NAME       READY   STATUS    RESTARTS   AGE   IP            NODE                NOMINATED NODE   READINESS GATES
+quota-ok   1/1     Running   0          2s    10.244.0.10   hw5-control-plane   <none>           <none>
+$ kubectl --context kind-hw5 create -f .\hw5\evidence\quota-over.yaml
+Error from server (Forbidden): error when creating ".\\hw5\\evidence\\quota-over.yaml": pods "quota-over" is forbidden: exceeded quota: budget, requested: requests.cpu=250m, used: requests.cpu=300m, limited: requests.cpu=500m
+$ kubectl --context kind-hw5 -n hw5-quota describe resourcequota budget
+Name:            budget
+Namespace:       hw5-quota
+Resource         Used  Hard
+--------         ----  ----
+limits.cpu       350m  600m
+limits.memory    64Mi  256Mi
+pods             1     2
+requests.cpu     300m  500m
+requests.memory  32Mi  128Mi

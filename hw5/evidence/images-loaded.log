@@ -1,0 +1,16 @@
+docker.io/library/hw5 pairs:v1          	saved	
+application/vnd.docker.distribution.manifest.v2+json sha256:fb6661fd107792714abe3cf1d0f632546e30b5698a70d4e2a53c02151371425a
+Importing	elapsed: 25.7s	total:   0.0 B	(0.0 B/s)	
+docker.io/library/hw5 pairs:v1          	saved	
+docker.io/library/hw5 rustfs:hw2        	saved	
+application/vnd.docker.distribution.manifest.v2+json sha256:fb6661fd107792714abe3cf1d0f632546e30b5698a70d4e2a53c02151371425a
+application/vnd.oci.image.manifest.v1+json sha256:7465b31993156ca5cc0eb4b3c59a01ff69651961be62bcfeb6ce569f22034a56
+Importing	elapsed: 25.7s	total:   0.0 B	(0.0 B/s)	
+docker.io/library/hw5-pairs                     v1                                      e14b8e4534cee       67.4MB
+docker.io/library/hw5-rustfs                    hw2                                     f6b22807f10db       111MB
+docker.io/library/hw5 pairs:v1          	saved	
+application/vnd.docker.distribution.manifest.v2+json sha256:d8463c257b3280bd538c9cddfa675314eca9c71a1c4aa00f57639e0f5bc8b545
+Importing	elapsed: 6.7 s	total:   0.0 B	(0.0 B/s)	
+docker.io/library/hw5 pairs:v1          	saved	
+application/vnd.docker.distribution.manifest.v2+json sha256:40642da3f8ccc3b04fe29f6aa663ff4ea0b25a020ef8059560a5e2379900a168
+Importing	elapsed: 7.3 s	total:   0.0 B	(0.0 B/s)	

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: quota-ok
+  namespace: hw5-quota
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 3
+  containers:
+  - name: sleep
+    image: hw5-pairs:v1
+    imagePullPolicy: Never
+    command:
+    - sleep
+    - '3600'
+    resources:
+      requests:
+        cpu: 300m
+        memory: 32Mi
+      limits:
+        cpu: 350m
+        memory: 64Mi

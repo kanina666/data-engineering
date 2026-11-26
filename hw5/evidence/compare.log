@@ -1,0 +1,13 @@
+$ python .\hw5\scripts\pipeline.py compare .\hw5\results\reference.csv .\hw5\results\parallel.csv
+reference_rows=10 actual_rows=10
+MATCH (1, 'Java', 'Spring Framework', 2081) | (1, 'Java', 'Spring Framework', 2081)
+MATCH (2, 'Java', 'PostgreSQL', 1773) | (2, 'Java', 'PostgreSQL', 1773)
+MATCH (3, 'Java', 'SQL', 1348) | (3, 'Java', 'SQL', 1348)
+MATCH (4, 'PostgreSQL', 'Spring Framework', 1159) | (4, 'PostgreSQL', 'Spring Framework', 1159)
+MATCH (5, 'Git', 'Java', 1091) | (5, 'Git', 'Java', 1091)
+MATCH (6, 'Java', 'Spring Boot', 967) | (6, 'Java', 'Spring Boot', 967)
+MATCH (7, 'Java', 'Kafka', 922) | (7, 'Java', 'Kafka', 922)
+MATCH (8, 'Docker', 'Java', 694) | (8, 'Docker', 'Java', 694)
+MATCH (9, 'Git', 'Spring Framework', 668) | (9, 'Git', 'Spring Framework', 668)
+MATCH (10, 'Hibernate ORM', 'Java', 659) | (10, 'Hibernate ORM', 'Java', 659)
+RESULT: 10/10 MATCH

@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: memory-working
+  namespace: hw5
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: pairs
+        image: hw5-pairs:v1
+        imagePullPolicy: Never
+        env:
+        - name: S3_ENDPOINT
+          value: http://rustfs.hw5.svc.cluster.local:9000
+        envFrom:
+        - secretRef:
+            name: s3-credentials
+        resources:
+          requests:
+            cpu: 250m
+            memory: 128Mi
+          limits:
+            cpu: '2'
+            memory: 317Mi
+        args:
+        - memory
+        - memory-working

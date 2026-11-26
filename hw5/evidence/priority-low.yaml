@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: priority-low
+  namespace: hw5
+spec:
+  restartPolicy: Never
+  terminationGracePeriodSeconds: 3
+  containers:
+  - name: sleep
+    image: hw5-pairs:v1
+    imagePullPolicy: Never
+    command:
+    - sleep
+    - '3600'
+    resources:
+      requests:
+        cpu: 14850m
+        memory: 32Mi
+      limits:
+        cpu: 14850m
+        memory: 64Mi
+  nodeSelector:
+    kubernetes.io/hostname: hw5-control-plane
+  priorityClassName: hw5-low
